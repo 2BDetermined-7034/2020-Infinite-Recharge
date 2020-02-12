@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants.  This class should not be used for any other purpose.  All constants should be
@@ -64,4 +66,11 @@ public final class Constants {
 
     //Indexer
     public static double DexIntake_CurrentThreshold = 25;
+
+    //DriveTrain
+    public static final double Shift_spread = 3.68;
+    public static final int ShiftHigh = 1;
+    public static final int ShiftLow = 0;
+    public static final double High_RPM = 4500;
+    public static final double Low_RPM = 1000;
 }
