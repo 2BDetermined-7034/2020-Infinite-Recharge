@@ -10,7 +10,6 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Shortcuts;
 import frc.robot.subsystems.Shooter;
 
 public class runShooter extends CommandBase {
@@ -38,8 +37,7 @@ public class runShooter extends CommandBase {
   public void execute() {
     double power = (1-m_power.getAsDouble())/2;
     double spin = m_spin.getAsDouble();
-    spin = 0;
-    m_shoot.set(power+spin, power-spin);
+    m_shoot.set(power+spin, -power-spin);
   }
 
   // Called once the command ends or is interrupted.

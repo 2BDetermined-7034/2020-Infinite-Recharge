@@ -90,7 +90,8 @@ public class RobotContainer {
       JoystickButton x3D_B11 = new JoystickButton(m_X3D, 11);
       JoystickButton x3D_B12 = new JoystickButton(m_X3D, 12);
 
-      x3D_Trigger.whileHeld(new runIntake(m_indexer, () -> (m_X3D.getThrottle()-1)/2, () -> m_X3D.getRawButton(2)));
+      //x3D_Trigger.whileHeld(new runIntake(m_indexer, () -> (m_X3D.getThrottle()-1)/2, () -> m_X3D.getRawButton(2)));
+      x3D_Trigger.whileHeld(new runShooter(m_shooter, () -> (m_X3D.getThrottle()-1)/2, () -> 0));
       // x3DButtons[3].whenPressed(() -> m_neoTest.reset());
       // x3DButtons[3].whenPressed(new motorSpinupTest(m_neoTest));
       x3D_B3.toggleWhenPressed(new VisAlign(m_drivetrain, m_limeLight, () -> m_X3D.getY(), () -> m_X3D.getX()));

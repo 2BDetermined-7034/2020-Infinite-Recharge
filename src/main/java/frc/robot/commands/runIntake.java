@@ -11,8 +11,6 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
-import frc.robot.Shortcuts;
 import frc.robot.subsystems.Indexer;
 
 public class runIntake extends CommandBase {
