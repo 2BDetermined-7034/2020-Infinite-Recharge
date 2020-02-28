@@ -13,7 +13,7 @@ import frc.robot.EpicPID;
 import frc.robot.Robot;
 import frc.robot.subsystems.NeoDrivetrain;
 
-public class turnForDegrees extends CommandBase {
+public class TurnForDegrees extends CommandBase {
 
   private double angle;
   private double maxSpeed;
@@ -23,7 +23,7 @@ public class turnForDegrees extends CommandBase {
   private NeoDrivetrain m_dt;
   private Timer time;
 
-  public turnForDegrees(NeoDrivetrain dt, double degrees, double maxSpeed) {
+  public TurnForDegrees(NeoDrivetrain dt, double degrees, double maxSpeed) {
     this.angle = degrees;
     this.maxSpeed = maxSpeed;
     m_dt = dt;

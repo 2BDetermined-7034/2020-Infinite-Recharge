@@ -7,9 +7,14 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.LimeLight;
+import frc.robot.subsystems.Shooter;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -18,9 +23,30 @@ public class TestAuto extends SequentialCommandGroup {
   /**
    * Creates a new TestAuto.
    */
-  public TestAuto(Drivetrain dt, LimeLight ll) {
+  public TestAuto(Drivetrain dt, LimeLight ll, Shooter shooter, Indexer indexer) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    super(new VisAlign(dt, ll, () -> 0, () -> 0));
+    /*
+    super(new InstantCommand(() -> shooter.setPivotTarget(60)),
+          new RunShooterWheels(shooter, () -> .9).alongWith(
+            new WaitCommand(4),
+            new VisAlign(dt, shooter, ll).withTimeout(5),
+            new RunIndexer(indexer, () -> .5, () -> 1)
+          ).withTimeout(5),
+          new InstantCommand(() -> shooter.setPivotTarget(0)),
+          new RunShooterWheels(shooter, () -> 0)
+          );*/
+    super(new ParallelCommandGroup(
+            new InstantCommand(() -> shooter.setWheels(.9)),
+            new VisAlign(dt, shooter, ll, () -> true, () -> false),
+            new SequentialCommandGroup(
+              new WaitCommand(3),
+              new RunIndexer(indexer, () -> .5, () -> 1).withTimeout(4),
+              new RunIndexer(indexer, () -> 0, () -> 0).withTimeout(.1),
+              new InstantCommand(() -> shooter.setPivotTarget(0))
+            )),
+            new InstantCommand(() -> shooter.setWheels(0))
+            //new DriveForCm(dt, 50)
+            );
   }
 }

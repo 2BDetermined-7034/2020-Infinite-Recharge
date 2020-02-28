@@ -56,9 +56,7 @@ public class Shortcuts {
         return low + (high-low)*x;
     }
 
-    public static double deadZone(double x, double deadzone) {
-        return x; // TODO
-    }
+    public static double deadZone(double x, double zone) { return (Math.abs(x) > zone) ? (x - Math.copySign(zone, x)) / (1.0 - zone) : 0.0; }
 
     public static void print(String str) {
         System.out.println("[DEBUG] " + str);

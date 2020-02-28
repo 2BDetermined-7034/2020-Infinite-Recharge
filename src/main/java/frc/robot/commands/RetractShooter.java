@@ -8,53 +8,43 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.NeoTest;
+import frc.robot.Constants;
+import frc.robot.subsystems.Shooter;
 
-public class motorSpinupTest extends CommandBase {
-  
-  private final NeoTest m_nt;
+public class RetractShooter extends CommandBase {
 
-  private int count;
-  private final double TPS = 50;
+  private Shooter m_shooter;
 
-  public motorSpinupTest(NeoTest nt) {
-    m_nt = nt;
-    addRequirements(nt);
+  /**
+   * Creates a new RetractShooter.
+   */
+  public RetractShooter(Shooter shooter) {
+    m_shooter = shooter;
+    addRequirements(shooter);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    count = 0;
+    m_shooter.stopWheels();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double time = count/TPS;
-    if (time > 3) {
-      if (time > 4) {
-        m_nt.set((7-time)/3);
-      }
-      else {
-        m_nt.set(1);
-      }
-    }
-    else {
-      m_nt.set(time/3);
-    }
-    count++;
+    m_shooter.setPivot(-.7);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_nt.stop();
+    m_shooter.stopPivot();
+    //m_shooter.setPivotEncoder(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return count > 7*TPS;
+    return m_shooter.getPivotCurrent() >= Constants.ShootPiv_SoftCurrentLimit;
   }
 }

@@ -7,38 +7,35 @@
 
 package frc.robot.commands;
 
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Climber;
+import frc.robot.Constants;
+import frc.robot.subsystems.Drivetrain;
 
-public class runClimber extends CommandBase {
-  
-  private final Climber m_climb;
+public class SwoleMode extends CommandBase {
+  private Drivetrain m_dt;
 
-  private final DoubleSupplier m_power;
-
-  public runClimber(Climber climber, DoubleSupplier power) {
-    m_climb = climber;
-    m_power = power;
-    addRequirements(climber);
+  /**
+   * Creates a new SwoleMode.
+   */
+  public SwoleMode(Drivetrain dt) {
+    m_dt = dt;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_dt.setGear(Constants.LOW_GEAR);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_climb.set(m_power.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_climb.set(0);
+    m_dt.setGear(Constants.HIGH_GEAR);
   }
 
   // Returns true when the command should end.
