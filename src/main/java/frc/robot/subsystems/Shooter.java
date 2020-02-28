@@ -105,6 +105,7 @@ public class Shooter extends SubsystemBase {
 
   public void setPivotEncoder(double correctAngle) {
     m_pivotEnc.setPosition(correctAngle);
+    Shortcuts.print("bruh");
   }
 
   public void stopWheels() {

@@ -76,15 +76,15 @@ public final class Constants {
     public static final double ShootPiv_kP = 0.03;
     public static final double ShootPiv_kI = 0;
     public static final double ShootPiv_kD = 0;
-    public static final double ShootFly_VkP = 1;
-    public static final double ShootPiv_DegreesPerRot = 0.95;
-    public static final double ShootPiv_MaxOutput = .3;
     public static final double ShootPiv_kGrav = 0;
-    public static final double ShootPiv_MaxAngle = 110;
+    public static final double ShootPiv_DegreesPerRot = 0.95;
+    public static final double ShootPiv_MaxOutput = .4;
+    public static final double ShootPiv_MaxAngle = 100;
     public static final double ShootPiv_MinAngle = 0;
     public static final double ShootPiv_PosThreshold = 2;
     public static final int ShootPiv_SoftCurrentLimit = 12;
     public static final int ShootPiv_HardCurrentLimit = 16;
+    public static final double ShootFly_VkP = 1;
     
     //Vision Allignment
     public static final double VisX_kP = 1;
@@ -101,7 +101,7 @@ public final class Constants {
 
     //Indexer
     public static final double IndexIntake_SoftCurrentLimit = 25;
-    public static final double IndexIntake_HardCurrentLimit = 40;
+    public static final double IndexIntake_HardCurrentLimit = 50;
     public static final double IndexIntake_Output = .75;
 
     //Drivetrain

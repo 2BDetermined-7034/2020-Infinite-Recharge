@@ -60,6 +60,8 @@ public class RobotContainer {
     SmartDashboard.putData("Reset Pivot", new InstantCommand(() -> m_shooter.setPivotEncoder(0)));
     SmartDashboard.putData("Reset Arm", new InstantCommand(() -> m_climber.setArmEncoder(0)));
     SmartDashboard.putData("Reset Drivetrain", new InstantCommand(() -> m_drivetrain.setEncoders(0)));
+    SmartDashboard.putData("Retract Shooter", new RetractShooter(m_shooter));
+    SmartDashboard.putNumber("Fly Wheel Speed", 0);
 
     m_autoCommand = new TestAuto(m_drivetrain, m_limeLight, m_shooter, m_indexer);
     // m_autoCommand = new DriveForCm(m_drivetrain, 130);
@@ -103,12 +105,12 @@ public class RobotContainer {
     
     m_gPad.getButton("A").whileHeld(new RunIntake(m_indexer, () -> Constants.IndexIntake_Output));
     m_gPad.getButton("B").whileHeld(new RunIntake(m_indexer, () -> -Constants.IndexIntake_Output));
-    m_gPad.getButton("X").whenPressed(new InstantCommand(() -> m_shooter.setWheels(1-m_X3D.getThrottle()/2)));
+    m_gPad.getButton("X").whenPressed(new InstantCommand(() -> m_shooter.setWheels(SmartDashboard.getNumber("Fly Wheel Speed", 0))));
     m_gPad.getButton("X").whenReleased(new InstantCommand(() -> m_shooter.setWheels(0)));
     m_gPad.getButton("Y").toggleWhenPressed(new RunArm(m_climber, () -> 2*(m_gPad.getAxis("LTrigger")-m_gPad.getAxis("RTrigger"))));
     m_gPad.getButton("START").whenPressed(new InstantCommand(() -> m_indexer.deployIntake(true)));
     m_gPad.getButton("BACK").whenPressed(new InstantCommand(() -> m_indexer.deployIntake(false)));
-    m_gPad.getButton("RSB").toggleWhenPressed(new ManualPivot(m_shooter, () -> (1+m_gPad.getAxis("RY"))/2));
+    m_gPad.getButton("RSB").toggleWhenPressed(new ManualPivot(m_shooter, () -> (1+m_X3D.getThrottle())/2));
     //m_gPad.getButton("LB").whileHeld(new RunLeveler(m_leveler, () -> -1));
     //m_gPad.getButton("RB").whileHeld(new RunLeveler(m_leveler, () -> 1));
     m_gPad.getButton("LSB").whenPressed(printCmd);
