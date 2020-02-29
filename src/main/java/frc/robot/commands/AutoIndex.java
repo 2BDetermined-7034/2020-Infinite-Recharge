@@ -7,45 +7,55 @@
 
 package frc.robot.commands;
 
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Indexer;
 
-public class RunArm extends CommandBase {
-  
-  private final Climber m_climb;
-  private double m_target;
-  private final DoubleSupplier m_i;
+public class AutoIndex extends CommandBase {
+  private final Indexer m_index;
+  private int m_stepper;
+  private int m_ballCount;
+  private int m_timer;
 
-  public RunArm(Climber climb, DoubleSupplier increment) {
-    m_climb = climb;
-    m_i = increment;
-    addRequirements(climb);
+  /**
+   * Creates a new AutoIndex.
+   */
+  public AutoIndex(Indexer indexer) {
+    m_index = indexer;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_target = m_climb.getArmPosition();
+    m_stepper = 0;
+    m_ballCount = 0;
+    m_timer = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_target = m_target+m_i.getAsDouble();
-    m_climb.setArmTargetWithBounds(m_target);
-    SmartDashboard.putNumber(getName() + " Target", m_target);
+    SmartDashboard.putNumber("Ball Counter", m_ballCount);
+    if(m_stepper == 0 && m_index.getIntakeCurrent() > 6) {
+      m_ballCount++;
+      m_stepper = 1;
+    }
+    if(m_stepper == 1) {
+      m_timer++;
+      if(m_timer > 50) {
+        m_stepper = 0;
+      }
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_climb.stopArm();
   }
 
   // Returns true when the command should end.
   @Override
-  public boolean isFinished() { return m_climb.getArmTemperature() > 60; }
+  public boolean isFinished() {
+    return false;
+  }
 }

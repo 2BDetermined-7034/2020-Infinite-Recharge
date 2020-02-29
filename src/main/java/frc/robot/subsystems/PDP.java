@@ -27,13 +27,26 @@ public class PDP extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Right1", getCurrent(Constants.PDPdriveR1));
-    SmartDashboard.putNumber("Right2", getCurrent(Constants.PDPdriveR2));
-    SmartDashboard.putNumber("Right3", getCurrent(Constants.PDPdriveR3));
-    SmartDashboard.putNumber("Left1", getCurrent(Constants.PDPdriveL1));
-    SmartDashboard.putNumber("Left2", getCurrent(Constants.PDPdriveL2));
-    SmartDashboard.putNumber("Left3", getCurrent(Constants.PDPdriveL3));
-    SmartDashboard.putNumber("Intake", getCurrent(Constants.PDPintake));
-    SmartDashboard.putNumber("EEEEEEEE", m_pdp.getTotalEnergy());
+    
+    SmartDashboard.putNumber("DriveR1 Current", getCurrent(Constants.PDPdriveR1));
+    SmartDashboard.putNumber("DriveR2 Current", getCurrent(Constants.PDPdriveR2));
+    SmartDashboard.putNumber("DriveR3 Current", getCurrent(Constants.PDPdriveR3));
+    SmartDashboard.putNumber("DriveL1 Current", getCurrent(Constants.PDPdriveL1));
+    SmartDashboard.putNumber("DriveL2 Current", getCurrent(Constants.PDPdriveL2));
+    SmartDashboard.putNumber("DriveL3 Current", getCurrent(Constants.PDPdriveL3));
+    /*
+    SmartDashboard.putNumber("Intake", getCurrent(Constants.PDPindexerIntake));
+    SmartDashboard.putNumber("Front Indexer", getCurrent(Constants.PDPindexerFront));
+    SmartDashboard.putNumber("Back Indexer", getCurrent(Constants.PDPindexerBack));
+    SmartDashboard.putNumber("LimeLight Current", getCurrent(Constants.PDPlimeLight));
+    SmartDashboard.putNumber("Shooter Pivot Current", getCurrent(Constants.PDPshooterPivot));
+    SmartDashboard.putNumber("ShooterR Current", getCurrent(Constants.PDPshooterR));
+    SmartDashboard.putNumber("ShooterL Current", getCurrent(Constants.PDPshooterL));
+    SmartDashboard.putNumber("Arm Current", getCurrent(Constants.PDParm));
+    SmartDashboard.putNumber("Winch Current", getCurrent(Constants.PDPwinch));
+    SmartDashboard.putNumber("Leveler Trolley Current", getCurrent(Constants.PDPlevelerTrolley));
+    
+    SmartDashboard.putNumber("Total Energy Used", m_pdp.getTotalEnergy());
+    */
   }
 }

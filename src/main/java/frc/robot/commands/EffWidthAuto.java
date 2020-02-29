@@ -4,13 +4,13 @@
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
-/*
+
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.NeoDrivetrain;
+import frc.robot.subsystems.Drivetrain;
 
 public class EffWidthAuto extends CommandBase {
 
@@ -21,11 +21,11 @@ public class EffWidthAuto extends CommandBase {
   private final int rotationNumber = 5;
   private double initialAngle;
 
-  private final NeoDrivetrain m_dt;
+  private final Drivetrain m_dt;
 
   private Timer timer;
 
-  public EffWidthAuto(NeoDrivetrain dt) {
+  public EffWidthAuto(Drivetrain dt) {
     m_dt = dt;
     addRequirements(dt);
   }
@@ -38,8 +38,8 @@ public class EffWidthAuto extends CommandBase {
     timeStop = 999;
     initialAngle = m_dt.getAngle();
     targetAngle = initialAngle + (rotationNumber * 360);
-    encoderOffsetL = m_dt.getEncPosL();
-    encoderOffsetR = m_dt.getEncPosR();
+    encoderOffsetL = m_dt.getPositionL();
+    encoderOffsetR = m_dt.getPositionR();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -54,7 +54,7 @@ public class EffWidthAuto extends CommandBase {
     else {
       m_dt.autoDrive(0, 0);
     }
-    SmartDashboard.putNumber("Bryce's command data", m_dt.getAngle()-initialAngle);
+    SmartDashboard.putNumber(getName() + " Degrees Turned", m_dt.getAngle()-initialAngle);
   }
 
   // Called once the command ends or is interrupted.
@@ -62,10 +62,9 @@ public class EffWidthAuto extends CommandBase {
   public void end(boolean interrupted) {
     if (!interrupted) {
       double degrees = m_dt.getAngle() - initialAngle;
-      double ticksPerCM = Drivetrain.TICKS_PER_METER / 100;
-      double L = (m_dt - encoderOffsetL) / ticksPerCM;
-      double R = (m_dt.getEncPosR() - encoderOffsetR) / ticksPerCM;
-      System.out.println("Effective Width is " + (180*(L+R)) / (-1*degrees*Math.PI) + " cm");
+      double L = (m_dt.getPositionL() - encoderOffsetL);
+      double R = (m_dt.getPositionR() - encoderOffsetR);
+      System.out.println("Effective Width is " + (180*(L+R)) / (-1*degrees*Math.PI) + " in");
     }
   }
 
@@ -75,4 +74,4 @@ public class EffWidthAuto extends CommandBase {
     return timer.get() >= timeStop;
   }
 }
-*/
+

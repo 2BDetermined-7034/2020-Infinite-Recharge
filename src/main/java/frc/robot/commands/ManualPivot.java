@@ -11,41 +11,47 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Climber;
+import edu.wpi.first.wpiutil.math.MathUtil;
+import frc.robot.Constants;
+import frc.robot.Shortcuts;
+import frc.robot.subsystems.Shooter;
 
-public class RunArm extends CommandBase {
+public class ManualPivot extends CommandBase {
   
-  private final Climber m_climb;
-  private double m_target;
-  private final DoubleSupplier m_i;
+  private final Shooter m_shoot;
 
-  public RunArm(Climber climb, DoubleSupplier increment) {
-    m_climb = climb;
-    m_i = increment;
-    addRequirements(climb);
+  private final DoubleSupplier m_percent;
+
+  public ManualPivot(Shooter shooter, DoubleSupplier percent) {
+    m_shoot = shooter;
+    m_percent = percent;
+    addRequirements(shooter);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_target = m_climb.getArmPosition();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_target = m_target+m_i.getAsDouble();
-    m_climb.setArmTargetWithBounds(m_target);
-    SmartDashboard.putNumber(getName() + " Target", m_target);
+    double p = MathUtil.clamp(m_percent.getAsDouble(), 0, 1);
+    double t = Shortcuts.squeeze(p, Constants.ShootPiv_MinAngle, Constants.ShootPiv_MaxAngle);
+    
+    m_shoot.setPivotTarget(t, false);
+
+    SmartDashboard.putNumber(getName() + " Target", t);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_climb.stopArm();
   }
 
   // Returns true when the command should end.
   @Override
-  public boolean isFinished() { return m_climb.getArmTemperature() > 60; }
+  public boolean isFinished() {
+    return m_shoot.getPivotTemp() > 60;
+  }
 }

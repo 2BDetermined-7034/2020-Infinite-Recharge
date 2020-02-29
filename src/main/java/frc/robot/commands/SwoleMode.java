@@ -8,53 +8,39 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.NeoTest;
+import frc.robot.Constants;
+import frc.robot.subsystems.Drivetrain;
 
-public class motorSpinupTest extends CommandBase {
-  
-  private final NeoTest m_nt;
+public class SwoleMode extends CommandBase {
+  private Drivetrain m_dt;
 
-  private int count;
-  private final double TPS = 50;
-
-  public motorSpinupTest(NeoTest nt) {
-    m_nt = nt;
-    addRequirements(nt);
+  /**
+   * Creates a new SwoleMode.
+   */
+  public SwoleMode(Drivetrain dt) {
+    m_dt = dt;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    count = 0;
+    m_dt.setGear(Constants.LOW_GEAR);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double time = count/TPS;
-    if (time > 3) {
-      if (time > 4) {
-        m_nt.set((7-time)/3);
-      }
-      else {
-        m_nt.set(1);
-      }
-    }
-    else {
-      m_nt.set(time/3);
-    }
-    count++;
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_nt.stop();
+    m_dt.setGear(Constants.HIGH_GEAR);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return count > 7*TPS;
+    return false;
   }
 }

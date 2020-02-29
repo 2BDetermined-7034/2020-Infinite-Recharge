@@ -10,18 +10,19 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Indexer;
 
-public class runClimber extends CommandBase {
+public class RunIndexer extends CommandBase {
   
-  private final Climber m_climb;
+  private final Indexer m_in;
+  private DoubleSupplier m_back;
+  private DoubleSupplier m_front;
 
-  private final DoubleSupplier m_power;
-
-  public runClimber(Climber climber, DoubleSupplier power) {
-    m_climb = climber;
-    m_power = power;
-    addRequirements(climber);
+  public RunIndexer(Indexer in, DoubleSupplier front, DoubleSupplier back) {
+    m_in = in;
+    m_front = front;
+    m_back = back;
+    addRequirements(in);
   }
 
   // Called when the command is initially scheduled.
@@ -32,13 +33,13 @@ public class runClimber extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_climb.set(m_power.getAsDouble());
+    m_in.setFront(m_front.getAsDouble());
+    m_in.setBack(m_back.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_climb.set(0);
   }
 
   // Returns true when the command should end.

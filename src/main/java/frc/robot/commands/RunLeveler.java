@@ -10,42 +10,36 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Shortcuts;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Leveler;
 
-public class runShooter extends CommandBase {
-  
-  private final Shooter m_shoot;
+public class RunLeveler extends CommandBase {
+  private Leveler m_l;
+  private DoubleSupplier m_speed;
 
-  private final DoubleSupplier m_power;
-  private final DoubleSupplier m_spin;
-
-  public runShooter(Shooter shooter, DoubleSupplier powerIn, DoubleSupplier spinIn) {
-    m_shoot = shooter;
-    m_power = powerIn;
-    m_spin = spinIn;
-    addRequirements(shooter);
+  /**
+   * Creates a new RunLeveler.
+   */
+  public RunLeveler(Leveler l, DoubleSupplier speed) {
+    m_l = l;
+    m_speed = speed;
+    addRequirements(l);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double power = (1-m_power.getAsDouble())/2;
-    double spin = m_spin.getAsDouble();
-    spin = 0;
-    m_shoot.set(power+spin, power-spin);
+    m_l.set(m_speed.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_shoot.stop();
+    m_l.stop();
   }
 
   // Returns true when the command should end.
