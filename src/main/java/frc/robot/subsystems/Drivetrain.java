@@ -106,7 +106,15 @@ public class Drivetrain extends SubsystemBase {
 
   public boolean getGear() { return m_shifter.get(); }
   
-  public double getAngle() { return m_gyro.getYaw(); }
+  public double getAngle() { 
+    if (false) {
+      return m_gyro.getYaw();
+    }
+    else {
+      return 1.6438*(getPositionL()+getPositionR());
+    }
+    
+  } //TODO if gyro is not working, use difference between the encoders
 
   public void drive(double speed, double rot) {
     m_drive.arcadeDrive(speed, rot);

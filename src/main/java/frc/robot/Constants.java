@@ -73,7 +73,7 @@ public final class Constants {
     public static final int PDPdriveL1 = 15;
 
     //shooter
-    public static final double ShootPiv_kP = 0.03;
+    public static final double ShootPiv_kP = 0.02;
     public static final double ShootPiv_kI = 0;
     public static final double ShootPiv_kD = 0;
     public static final double ShootPiv_kGrav = 0;
@@ -97,7 +97,7 @@ public final class Constants {
     public static final double VisY_Offset = 6;
     public static final double VisY_VTol = 100;
     public static final double VisX_VTol = 100;
-    public static int Vis_TimerConfidence = 10;
+    public static int Vis_TimerConfidence = 3;
 
     //Indexer
     public static final double IndexIntake_SoftCurrentLimit = 25;
@@ -110,10 +110,10 @@ public final class Constants {
     public static final boolean LOW_GEAR = true;
     public static final double ShiftRPMTriggerHigh = 5200;
     public static final double ShiftRPMTriggerLow = 1000;
-    public static final double DT_kP = .03;
+    public static final double DT_kP = .02;
     public static final double DT_kI = 0;
-    public static final double DT_kD = 1;
-    public static final double DT_MaxOutput = .1;
+    public static final double DT_kD = 0;
+    public static final double DT_MaxOutput = 1;
     public static final double DT_cmPerRot = 6.86;
 
     public static final double DT_pidPositionTolearance = 1;

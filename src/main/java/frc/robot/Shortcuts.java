@@ -56,6 +56,18 @@ public class Shortcuts {
         return low + (high-low)*x;
     }
 
+    /**
+     * Nudges x towards the target with strength. Set x to the result.
+     * @param x Number to be nudged
+     * @param target Number that x is nudged towards
+     * @param strength The strength with which to nudge x
+     * @return The new x.
+     */
+    public static double nudge(double x, double target, double strength) {
+        double n = 1/strength;
+        return (n*x+target)/(n+1);
+    }
+
     public static double deadZone(double x, double zone) { return (Math.abs(x) > zone) ? (x - Math.copySign(zone, x)) / (1.0 - zone) : 0.0; }
 
     public static void print(String str) {
