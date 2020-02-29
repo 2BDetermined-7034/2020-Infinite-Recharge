@@ -15,9 +15,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class LimeLight extends SubsystemBase {
   
   private final NetworkTable m_table;
+  private int camMode;
+  private int lightMode;
 
   public LimeLight() {
     m_table = NetworkTableInstance.getDefault().getTable("limelight");
+    camMode = 0;
+    lightMode = 3;
   }
 
   public double getXAngle() { return m_table.getEntry("tx").getDouble(0); }
@@ -27,7 +31,14 @@ public class LimeLight extends SubsystemBase {
   public double getLongSide() { return m_table.getEntry("tlong").getDouble(0); }
   public boolean getDetected() { return m_table.getEntry("tv").getDouble(0) > 0; }
   public double getLastDetected() { return m_table.getEntry("tv").getLastChange(); }
-
+  public void setMode() { 
+    m_table.getEntry("camMode").setNumber((camMode == 0) ? 1 : 0);
+    camMode = (camMode==0) ? 1 : 0;
+  }
+  public void setLight() { 
+    m_table.getEntry("ledMode").setNumber((lightMode == 3) ? 1 : 3);
+    lightMode = (lightMode==3) ? 1 : 3;
+  }
   @Override
   public void periodic() {
     SmartDashboard.putNumber(getName() + " X Angle", getXAngle());

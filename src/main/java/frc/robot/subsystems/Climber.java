@@ -17,6 +17,7 @@ import com.revrobotics.CANPIDController.AccelStrategy;
 import com.revrobotics.CANPIDController.ArbFFUnits;
 import com.revrobotics.CANSparkMax.IdleMode;
 
+
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -123,7 +124,11 @@ public class Climber extends SubsystemBase {
   }
 
   public void setBrake(boolean broken) {
-    m_brake.set(broken ? Value.kReverse : Value.kForward);
+    //m_brake.set(broken ? Value.kReverse : Value.kForward);
+    if(broken){
+      m_winch.setIdleMode(IdleMode.kBrake);
+      m_arm.setIdleMode(IdleMode.kBrake);
+    }
   }
 
   public void stopArm() { m_arm.stopMotor(); }

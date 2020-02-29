@@ -128,7 +128,7 @@ public final class Constants {
     //Arm
     public static final double Arm_MinAngle = 0;
     public static final double Arm_MaxAngle = 110;
-    public static final double Arm_MaxOutput = .5;
+    public static final double Arm_MaxOutput = .35;
     public static final int Arm_SoftCurrentLimit = 40;
     public static final int Arm_HardCurrentLimit = 60;
     public static final double Arm_DegreesPerRot = 7.667;

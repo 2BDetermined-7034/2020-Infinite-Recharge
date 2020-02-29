@@ -30,6 +30,7 @@ public class RunWinch extends CommandBase {
   @Override
   public void initialize() {
     m_climb.setBrake(false);
+    m_climb.stopArm();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
