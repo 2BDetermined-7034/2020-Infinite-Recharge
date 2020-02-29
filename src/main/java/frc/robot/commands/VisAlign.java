@@ -8,12 +8,10 @@
 package frc.robot.commands;
 
 import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.Shortcuts;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.LimeLight;
 import frc.robot.subsystems.Shooter;
@@ -23,8 +21,9 @@ public class VisAlign extends CommandBase {
   private final Drivetrain m_dt;
   private final LimeLight m_ll;
   private final Shooter m_shoot;
+
+  private BooleanSupplier m_vis;
   private BooleanSupplier m_interrupt;
-  private DoubleSupplier m_drive;
 
   private boolean tapeDetected;
 
@@ -37,12 +36,12 @@ public class VisAlign extends CommandBase {
   private double targetX_R;
   private double distance;
   
-  public VisAlign(Drivetrain dt, Shooter shooter, LimeLight ll, DoubleSupplier driveSpeed, BooleanSupplier interrupt) {
+  public VisAlign(Drivetrain dt, Shooter shooter, LimeLight ll, BooleanSupplier useVision, BooleanSupplier interrupt) {
     m_dt = dt;
     m_ll = ll;
     m_shoot = shooter;
+    m_vis = useVision;
     m_interrupt = interrupt;
-    m_drive = driveSpeed;
     addRequirements(dt);
     addRequirements(shooter);
     addRequirements(ll);
@@ -64,8 +63,8 @@ public class VisAlign extends CommandBase {
   // Called repeatedly when this Command is scheduled to run
   @Override
   public void execute() {
+    boolean vis = m_vis.getAsBoolean();
     tapeDetected = m_ll.getDetected();
-    double drive = -20*m_drive.getAsDouble();
 
     if(tapeDetected) {
       tapeTimer++;
@@ -74,7 +73,7 @@ public class VisAlign extends CommandBase {
       tapeTimer = 0;
     }
 
-    if (tapeTimer >= Constants.Vis_TimerConfidence) {
+    if (tapeTimer >= Constants.Vis_TimerConfidence && vis) {
       double visY = m_ll.getYAngle() + Constants.VisY_Offset;
       double visX = m_ll.getXAngle() + Constants.VisX_Offset;
       double visA = m_ll.getArea();
@@ -85,11 +84,12 @@ public class VisAlign extends CommandBase {
       targetX_R = m_dt.getPositionR() + visX;
       targetY = m_shoot.getPivotPosition() - visY;
 
+      double n = 3;
       double distanceNow = 0.0254*Constants.VisY_distanceConstant/visA;
-      distance = Shortcuts.nudge(distance, distanceNow, 3);
+      distance = (n*distance + distanceNow)/(n+1);
     } else {}
 
-    m_dt.setPositionTarget(targetX_L+drive, targetX_R-drive);
+    m_dt.setPositionTarget(targetX_L, targetX_R);
     m_shoot.setPivotTarget(targetY);
 
     SmartDashboard.putNumber(getName() + " Distance", distance/0.0254);

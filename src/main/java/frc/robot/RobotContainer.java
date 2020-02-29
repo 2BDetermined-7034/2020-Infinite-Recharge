@@ -94,7 +94,7 @@ public class RobotContainer {
     m_X3D.getButton(7).whileHeld(new RunWinch(m_climber, () -> .6));
     m_X3D.getButton(1).whileHeld(new SwoleMode(m_drivetrain));
     m_X3D.getButton(3).toggleWhenPressed(new VisAlign(m_drivetrain, m_shooter, m_limeLight, 
-      () -> -m_X3D.getY(), () -> (Math.abs(m_X3D.getX()) > .4)
+      () -> true, () -> (Math.abs(m_X3D.getX()) > .4)
     ));
     
     //TODO was bound to same button as winch m_X3D.getButton(7).whenPressed(new RetractArm(m_climber));

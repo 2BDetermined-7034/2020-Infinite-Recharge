@@ -38,7 +38,7 @@ public class TestAuto extends SequentialCommandGroup {
           );*/
     super(new ParallelCommandGroup(
             new InstantCommand(() -> shooter.setWheels(.9)),
-            new VisAlign(dt, shooter, ll, () -> 0, () -> false),
+            new VisAlign(dt, shooter, ll, () -> false, () -> false),
             new SequentialCommandGroup(
               new WaitCommand(3),
               new RunIndexer(indexer, () -> .5, () -> 1).withTimeout(4),
