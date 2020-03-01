@@ -60,8 +60,8 @@ public class RobotContainer {
     SmartDashboard.putData("Reset Pivot", new InstantCommand(() -> m_shooter.setPivotEncoder(0)));
     SmartDashboard.putData("Reset Arm", new InstantCommand(() -> m_climber.setArmEncoder(0)));
     SmartDashboard.putData("Reset Drivetrain", new InstantCommand(() -> m_drivetrain.setEncoders(0)));
-    SmartDashboard.putData("Retract Shooter", new RetractShooter(m_shooter));
-    SmartDashboard.putNumber("Fly Wheel Speed", 0);
+    SmartDashboard.putData("Calibrate Shooter Pivot", new CalPivot(m_shooter));
+    SmartDashboard.putNumber("Fly Wheel Speed", .85);
 
     m_autoCommand = new TestAuto(m_drivetrain, m_limeLight, m_shooter, m_indexer);
     // m_autoCommand = new DriveForCm(m_drivetrain, 130);

@@ -39,7 +39,7 @@ public class Climber extends SubsystemBase {
     m_armPID = m_arm.getPIDController();
     m_armEnc = m_arm.getEncoder();
 
-    m_arm.setSmartCurrentLimit(Constants.Arm_HardCurrentLimit);
+    m_arm.setSmartCurrentLimit((int) Constants.Arm_HardCurrentLimit);
 
     m_arm.setIdleMode(IdleMode.kBrake);
     m_armEnc.setPositionConversionFactor(Constants.Arm_DegreesPerRot);
@@ -135,5 +135,6 @@ public class Climber extends SubsystemBase {
     SmartDashboard.putNumber(getName() + " Arm Output", getArmOutput());
     SmartDashboard.putNumber(getName() + " Arm Position", getArmPosition());
     SmartDashboard.putNumber(getName() + " Arm Temperature", getArmTemperature());
+    SmartDashboard.putNumber(getName() + " Arm Velocity", getArmVelocity());
   }
 }

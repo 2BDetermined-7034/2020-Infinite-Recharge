@@ -47,7 +47,7 @@ public class Shooter extends SubsystemBase {
     m_pivotPID.setI(Constants.ShootPiv_kI);
     m_pivotPID.setD(Constants.ShootPiv_kD);
     m_pivotPID.setOutputRange(-Constants.ShootPiv_MaxOutput, Constants.ShootPiv_MaxOutput);
-    m_pivot.setSmartCurrentLimit(Constants.ShootPiv_HardCurrentLimit);
+    m_pivot.setSmartCurrentLimit((int) Constants.ShootPiv_HardCurrentLimit);
   }
 
   //Getters for the flywheels
@@ -122,5 +122,6 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber(getName() + " Pivot Position", getPivotPosition());
     SmartDashboard.putNumber(getName() + " Pivot Output", getPivotOutput());
     SmartDashboard.putNumber(getName() + " Pivot Current", getPivotCurrent());
+    SmartDashboard.putNumber(getName() + " Pivot Velocity", getPivotVelocity());
   }
 }

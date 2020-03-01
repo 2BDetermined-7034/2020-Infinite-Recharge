@@ -82,8 +82,8 @@ public final class Constants {
     public static final double ShootPiv_MaxAngle = 100;
     public static final double ShootPiv_MinAngle = 0;
     public static final double ShootPiv_PosThreshold = 2;
-    public static final int ShootPiv_SoftCurrentLimit = 12;
-    public static final int ShootPiv_HardCurrentLimit = 16;
+    public static final double ShootPiv_SoftCurrentLimit = .4;
+    public static final double ShootPiv_HardCurrentLimit = 8;
     public static final double ShootFly_VkP = 1;
     
     //Vision Allignment
@@ -97,7 +97,10 @@ public final class Constants {
     public static final double VisY_Offset = 6;
     public static final double VisY_VTol = 100;
     public static final double VisX_VTol = 100;
-    public static int Vis_TimerConfidence = 5;
+    public static int Vis_TimerConfidence = 10;
+    public static final double Vis_LLHeight = .2;
+    public static final double Vis_LLAngle = 27.2;
+
 
     //Indexer
     public static final double IndexIntake_SoftCurrentLimit = 25;
@@ -110,9 +113,9 @@ public final class Constants {
     public static final boolean LOW_GEAR = true;
     public static final double ShiftRPMTriggerHigh = 5200;
     public static final double ShiftRPMTriggerLow = 1000;
-    public static final double DT_kP = .03;
+    public static final double DT_kP = .05;
     public static final double DT_kI = 0;
-    public static final double DT_kD = .1;
+    public static final double DT_kD = .2;
     public static final double DT_MaxOutput = 1;
     public static final double DT_cmPerRot = 6.86;
 
@@ -127,8 +130,8 @@ public final class Constants {
     public static final double Arm_MinAngle = 0;
     public static final double Arm_MaxAngle = 110;
     public static final double Arm_MaxOutput = .5;
-    public static final int Arm_SoftCurrentLimit = 40;
-    public static final int Arm_HardCurrentLimit = 60;
+    public static final double Arm_SoftCurrentLimit = .5;
+    public static final double Arm_HardCurrentLimit = 60;
     public static final double Arm_DegreesPerRot = 7.667;
     public static final double Arm_kP = .05;
     public static final double Arm_kI = 0;
