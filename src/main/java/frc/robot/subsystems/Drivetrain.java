@@ -16,6 +16,10 @@ import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -34,6 +38,7 @@ public class Drivetrain extends SubsystemBase {
   private final CANEncoder m_rightEnc;
 
   private final DifferentialDrive m_drive;
+  private final DifferentialDriveOdometry m_odometry = null;
 
   //private final CANPIDController m_pidControl;
 
@@ -84,7 +89,19 @@ public class Drivetrain extends SubsystemBase {
 
 	public void autoDrive(double leftSpeed, double rightSpeed) {
 		m_drive.tankDrive(rightSpeed, leftSpeed);
-	}
+  }
+  
+   /**
+   * Controls the left and right sides of the drive directly with voltages.
+   *
+   * @param leftVolts  the commanded left output
+   * @param rightVolts the commanded right output
+   */
+  public void tankDriveVolts(double leftVolts, double rightVolts) {
+    m_left.setVoltage(leftVolts);
+    m_right.setVoltage(-rightVolts);
+    m_drive.feed();
+  }
 
 	public void stop() {
 		m_drive.stopMotor();
@@ -94,11 +111,54 @@ public class Drivetrain extends SubsystemBase {
     return m_gyro.getYaw();
   }
 
+  public double getEncPosL ()  {
+    return m_leftEnc.getPosition();
+  }
+
+  public double getEncPosR ()  {
+    return m_rightEnc.getPosition();
+  }
+
+   /**
+   * Returns the current wheel speeds of the robot.
+   *
+   * @return The current wheel speeds.
+   */
+  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+    return new DifferentialDriveWheelSpeeds(m_leftEnc.getVelocity(), m_rightEnc.getVelocity());
+  }
+
+  
+
+  /**
+   * Returns the heading of the robot.
+   *
+   * @return the robot's heading in degrees, from -180 to 180
+   */
+
+   // TODO figure out if gyro is reversed
+  public double getHeading() {
+    return Math.IEEEremainder(m_gyro.getAngle(), 360);
+  }
+
+  	
+
+  /**
+   * Returns the currently-estimated pose of the robot.
+   *
+   * @return The pose.
+   */
+  public Pose2d getPose() {
+    return m_odometry.getPoseMeters();
+  }
+
   @Override
   public void periodic() {
     SmartDashboard.putNumber(getName() + " Left Encoder", m_leftEnc.getPosition());
     SmartDashboard.putNumber(getName() + " Right Encoder", m_rightEnc.getPosition());
     SmartDashboard.putNumber(getName() + " Left Throttle", m_left.getAppliedOutput());
     SmartDashboard.putNumber(getName() + " Right Throttle", m_right.getAppliedOutput());
+
+    m_odometry.update(Rotation2d.fromDegrees(getHeading()), m_leftEnc.getPosition(), m_rightEnc.getPosition());
   }
 }
