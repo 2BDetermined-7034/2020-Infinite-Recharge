@@ -34,7 +34,7 @@ public class VisAlign extends CommandBase {
   private double targetY;
   private double targetX_L;
   private double targetX_R;
-  private double distance;
+  //private double distance;
   
   public VisAlign(Drivetrain dt, Shooter shooter, LimeLight ll, BooleanSupplier useVision, BooleanSupplier interrupt) {
     m_dt = dt;
@@ -52,8 +52,8 @@ public class VisAlign extends CommandBase {
   public void initialize() {
     tapeDetected = false;
     tapeTimer = 0;
-    distance = 0.0254*Constants.VisY_distanceConstant/m_ll.getArea();
-    targetY = 60;
+    //distance = m_ll.getEstimatedDistance();
+    targetY = 45;
     targetX_L = m_dt.getPositionL();
     targetX_R = m_dt.getPositionR();
     errorY = 0;
@@ -77,22 +77,26 @@ public class VisAlign extends CommandBase {
       double visY = m_ll.getYAngle() + Constants.VisY_Offset;
       double visX = m_ll.getXAngle() + Constants.VisX_Offset;
       double visA = m_ll.getArea();
-      errorY = visY;
-      errorX = visX;
+      double distance = m_ll.getEstimatedDistance();
+      
+      
 
       targetX_L = m_dt.getPositionL() + visX;
       targetX_R = m_dt.getPositionR() + visX;
-      targetY = m_shoot.getPivotPosition() - visY;
+      targetY = .8*Math.toDegrees(Math.atan(.7*(distance+1)));
+
+      errorX = visX;
+      errorY = m_shoot.getPivotPosition() - targetY;
 
       double n = 3;
       double distanceNow = 0.0254*Constants.VisY_distanceConstant/visA;
-      distance = (n*distance + distanceNow)/(n+1);
+      
     } else {}
 
     m_dt.setPositionTarget(targetX_L, targetX_R);
     m_shoot.setPivotTarget(targetY);
 
-    SmartDashboard.putNumber(getName() + " Distance", distance/0.0254);
+    SmartDashboard.putNumber("BRUHBRUHBRUH", targetY);
   }
 
   // Make this return true when this Command no longer needs to run execute()

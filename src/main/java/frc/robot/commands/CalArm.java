@@ -9,44 +9,53 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.Shortcuts;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Shooter;
 
-public class RetractShooter extends CommandBase {
+public class CalArm extends CommandBase {
 
-  private Shooter m_shooter;
+  private Climber m_climber;
+
+  private double power;
+
+  private double targetV = -50;
 
   /**
    * Creates a new RetractShooter.
    */
-  public RetractShooter(Shooter shooter) {
-    m_shooter = shooter;
-    addRequirements(shooter);
+  public CalArm(Climber climber) {
+    m_climber = climber;
+    addRequirements(climber);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_shooter.stopWheels();
+    power = m_climber.getArmOutput();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooter.setPivot(-.2);
+    double v = m_climber.getArmVelocity();
+    power += Shortcuts.bound(0.00001*(targetV-v), 0.002);
+    m_climber.setArm(power);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_shooter.stopPivot();
+    m_climber.stopArm();
     if(!interrupted) {
-      m_shooter.setPivotEncoder(0);
+      Shortcuts.print("ARM RESET");
+      m_climber.setArmEncoder(0);
     }
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_shooter.getPivotCurrent() >= Constants.ShootPiv_SoftCurrentLimit;
+    return m_climber.getArmCurrent() >= Constants.Arm_SoftCurrentLimit;
   }
 }

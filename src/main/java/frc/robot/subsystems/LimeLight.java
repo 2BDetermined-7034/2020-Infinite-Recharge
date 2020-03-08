@@ -12,6 +12,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.limelight.CamMode;
+import frc.robot.Constants;
 
 public class LimeLight extends SubsystemBase {
   
@@ -30,6 +31,9 @@ public class LimeLight extends SubsystemBase {
   public double getLongSide() { return m_table.getEntry("tlong").getDouble(0); }
   public boolean getDetected() { return m_table.getEntry("tv").getDouble(0) > 0; }
   public double getLastDetected() { return m_table.getEntry("tv").getLastChange(); }
+  public double getEstimatedDistance() {
+    return 2.494*Math.pow(Math.tan(Math.toRadians(Constants.Vis_LLAngle+getYAngle())), -1);
+  }
 
   public CamMode getMode() {
     return CamMode.getFromNetworkTableValue(m_table.getEntry("camMode").getNumber(0).intValue());
@@ -49,5 +53,6 @@ public class LimeLight extends SubsystemBase {
     SmartDashboard.putNumber(getName() + " X Angle", getXAngle());
     SmartDashboard.putNumber(getName() + " Y Angle", getYAngle());
     SmartDashboard.putBoolean(getName() + " Detected", getDetected());
+    SmartDashboard.putNumber(getName() + " Distance", getEstimatedDistance());
   }
 }

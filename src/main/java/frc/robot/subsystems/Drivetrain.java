@@ -14,6 +14,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.SPI;
@@ -72,6 +73,11 @@ public class Drivetrain extends SubsystemBase {
     m_left3.follow(m_left);
     m_right2.follow(m_right);
     m_right3.follow(m_right);
+
+    m_left2.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 100);
+    m_left3.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 100);
+    m_right2.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 100);
+    m_right3.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 100);
 
     m_left.setInverted(true);
     m_right.setInverted(true);
