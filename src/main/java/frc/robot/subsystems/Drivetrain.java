@@ -15,8 +15,10 @@ import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -36,7 +38,7 @@ public class Drivetrain extends SubsystemBase {
   private CANPIDController m_leftPID;
   private final DifferentialDrive m_drive;
 
-  private final Solenoid m_shifter;
+  private final DoubleSolenoid m_shifter;
 
   private final AHRS m_gyro;
 
@@ -54,7 +56,7 @@ public class Drivetrain extends SubsystemBase {
     m_rightPID = m_right.getPIDController();
     m_leftPID = m_left.getPIDController();
 
-    m_shifter = new Solenoid(Constants.IDshifter);
+    m_shifter = new DoubleSolenoid(Constants.IDshifterHigh, Constants.IDshifterLow);
 
     m_gyro = new AHRS(SPI.Port.kMXP);
 
@@ -104,7 +106,7 @@ public class Drivetrain extends SubsystemBase {
   public double getCurrentL() { return m_left.getOutputCurrent(); } //Only gets the current of the master motor controller
   public double getCurrentR() { return m_right.getOutputCurrent(); } //Only gets the current of the master motor controller
 
-  public boolean getGear() { return m_shifter.get(); }
+  public boolean getGear() {return (m_shifter.get() == Value.kForward); }
   
   public double getAngle() { 
     if (false) {
@@ -144,7 +146,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void setGear(boolean gear) {
-    m_shifter.set(gear);
+    m_shifter.set(gear ? Value.kForward : Value.kReverse);
     //double conversion = Constants.DT_InchesPerRot/(gear == Constants.LOW_GEAR ? Constants.Shift_spread : 1);
     //m_rightEnc.setPositionConversionFactor(conversion);
     //m_leftEnc.setPositionConversionFactor(conversion);

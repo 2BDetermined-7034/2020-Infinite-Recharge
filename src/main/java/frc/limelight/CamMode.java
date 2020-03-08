@@ -5,14 +5,26 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.controllers;
+package frc.limelight;
 
-public class X3D extends EpicHID {
+/**
+ * Add your docs here.
+ */
+public enum CamMode {
+    VISION(0),
+    DRIVERCAM(1);
 
-    public static final String[] button = {"trigger","2","3","4","5","6","7","8","9","10","11","12"};
-    public static final String[] axisNames = {"x","y","twist","throttle"};
+    private final int mode;
 
-    public X3D(int port) {
-        super(port, button, axisNames);
+    private CamMode(final int mode) {
+        this.mode = mode;
+    }
+
+    public int getNetworkTableValue() {
+        return mode;
+    }
+
+    public static CamMode getFromNetworkTableValue(int value) {
+        return CamMode.values()[value];
     }
 }

@@ -21,35 +21,37 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
  */
 public final class Constants {
     //talonSRX
-    public static final int IDshooterWheels = 2;
-
-    public static final int IDindexerIntake = 5;
-    public static final int IDindexerFront = 4;
-    public static final int IDindexerBack = 1;
+    public static final int IDindexerIntake = 3;
+    public static final int IDindexerHopper = 5;
+    public static final int IDindexerConveyor = 4;
+    public static final int IDindexerElevator = 1;
+    public static final int IDshooterWheelL = 0;
+    public static final int IDshooterWheelR = 2;
 
     //sparkMAX
-    public static final int IDdriveR1 = 1;
-    public static final int IDdriveR2 = 2;
-    public static final int IDdriveR3 = 3;
-    public static final int IDdriveL1 = 4;
-    public static final int IDdriveL2 = 5;
+    public static final int IDdriveL1 = 3;
+    public static final int IDdriveL2 = 1;
     public static final int IDdriveL3 = 6;
-
-    public static final int IDshooterPivot = 9;
-
-    public static final int IDarm = 10;
+    public static final int IDdriveR1 = 2;
+    public static final int IDdriveR2 = 5;
+    public static final int IDdriveR3 = 4;
+    //switch 8 and 9
+    public static final int IDshooterPivot = 8;
+    public static final int IDarm = 9;
     public static final int IDwinch = 7;
-    public static final int IDlevelerTrolley = 8;
-
-    //controllers
-    public static final int IDjoystick = 0;
-    public static final int IDgamepad = 1;
 
     //pneumatics
     public static final int IDcompressor = 0;
-    public static final int[] IDwinchBrake = {2, 3};
-    public static final int IDshifter = 4;
-    public static final int IDintakeExtender = 5;
+    public static final int IDshifterHigh = 1;
+    public static final int IDshifterLow = 0;
+    public static final int IDintakeForward = 3;
+    public static final int IDintakeReverse = 2;
+    public static final int IDarmHookErector = 4;
+
+    //controllers
+    public static final int IDjoystick = 0;
+    public static final int IDgunnerpanel = 1;
+    public static final int IDgamepad = 2;
 
     //sensors
 
@@ -79,14 +81,14 @@ public final class Constants {
     public static final double ShootPiv_kI = 0;
     public static final double ShootPiv_kD = 0;
     public static final double ShootPiv_kGrav = 0;
-    public static final double ShootPiv_DegreesPerRot = 0.95;
+    public static final double ShootPiv_DegreesPerRot = 1;
     public static final double ShootPiv_MaxOutput = .4;
     public static final double ShootPiv_MaxAngle = 100;
-    public static final double ShootPiv_MinAngle = 0;
+    public static final double ShootPiv_MinAngle = 2;
     public static final double ShootPiv_PosThreshold = 2;
     public static final int ShootPiv_SoftCurrentLimit = 12;
-    public static final int ShootPiv_HardCurrentLimit = 16;
-    public static final double ShootFly_VkP = 1;
+    public static final int ShootPiv_HardCurrentLimit = 10;
+    public static final double ShootFly_kP = 1;
 
     //Vision Allignment
     public static final double VisX_kP = 1;
@@ -100,6 +102,7 @@ public final class Constants {
     public static final double VisY_VTol = 100;
     public static final double VisX_VTol = 100;
     public static int Vis_TimerConfidence = 5;
+	
 
     //Indexer
     public static final double IndexIntake_SoftCurrentLimit = 25;

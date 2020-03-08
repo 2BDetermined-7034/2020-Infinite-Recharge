@@ -12,15 +12,18 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.Shortcuts;
 import frc.robot.subsystems.Climber;
 
-public class RaiseArm extends CommandBase {
+public class ToggleArm extends CommandBase {
 
   private final Climber m_climb;
+  private final boolean m_up;
   private double m_target;
   
-  public RaiseArm(Climber climb) {
+  public ToggleArm(Climber climb, boolean up) {
     m_climb = climb;
+    m_up = up;
     addRequirements(climb);
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
@@ -35,19 +38,24 @@ public class RaiseArm extends CommandBase {
   // Called repeatedly when this Command is scheduled to run
   @Override
   public void execute() {
-    m_target = m_target+1;
+    m_target += m_up ? 2 : -1;
     m_climb.setArmTargetWithBounds(m_target);
+    m_climb.setWinch(m_up?-.6:.6);
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   public boolean isFinished() {
-    return m_climb.getArmPosition()<= Constants.Arm_MaxAngle;
+    boolean test = m_up
+      ? m_climb.getArmPosition() >= Constants.Arm_MaxAngle - 5
+      : m_climb.getArmPosition() <= Constants.Arm_MinAngle + 5; 
+      System.out.println(m_climb.getArmPosition());
+      return test;
   }
 
   // Called once after isFinished returns true
   @Override
-  public void end(boolean interrupted) {
+  public void end(boolean interrupted) {    m_climb.stopWinch();
     m_climb.stopArm();
   }
 

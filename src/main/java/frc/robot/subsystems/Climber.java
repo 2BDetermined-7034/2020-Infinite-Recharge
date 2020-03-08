@@ -17,8 +17,8 @@ import com.revrobotics.CANPIDController.AccelStrategy;
 import com.revrobotics.CANPIDController.ArbFFUnits;
 import com.revrobotics.CANSparkMax.IdleMode;
 
-
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -33,7 +33,8 @@ public class Climber extends SubsystemBase {
   private final CANEncoder m_armEnc;
 
   private final CANSparkMax m_winch;
-  private final DoubleSolenoid m_brake;
+
+  private final Solenoid m_erector;
 
   public Climber() {
     m_arm = new CANSparkMax(Constants.IDarm, CANSparkMaxLowLevel.MotorType.kBrushless);
@@ -60,7 +61,7 @@ public class Climber extends SubsystemBase {
     m_winch.setInverted(true);
     m_winch.setIdleMode(IdleMode.kBrake);
 
-    m_brake = new DoubleSolenoid(Constants.IDwinchBrake[0], Constants.IDwinchBrake[1]);
+    m_erector = new Solenoid(Constants.IDarmHookErector);
   }
 
   public double getArmOutput() { return m_arm.getAppliedOutput(); }
@@ -124,16 +125,18 @@ public class Climber extends SubsystemBase {
   }
 
   public void setBrake(boolean broken) {
-    //m_brake.set(broken ? Value.kReverse : Value.kForward);
-    if(broken){
-      m_winch.setIdleMode(IdleMode.kBrake);
-      m_arm.setIdleMode(IdleMode.kBrake);
-    }
+    IdleMode mode = broken ? IdleMode.kBrake : IdleMode.kCoast;
+    m_winch.setIdleMode(mode);
+    m_arm.setIdleMode(mode);
   }
 
   public void stopArm() { m_arm.stopMotor(); }
 
   public void stopWinch() { m_winch.stopMotor(); }
+
+  public void erect(boolean state) {
+    m_erector.set(state);
+  }
 
   @Override
   public void periodic() {

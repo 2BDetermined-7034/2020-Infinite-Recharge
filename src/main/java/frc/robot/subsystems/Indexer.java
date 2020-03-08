@@ -9,7 +9,9 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -18,18 +20,23 @@ import frc.robot.Shortcuts;
 public class Indexer extends SubsystemBase {
   
   private final WPI_TalonSRX m_intake;
-  private final WPI_TalonSRX m_front;
-  private final WPI_TalonSRX m_back;
-  private final Solenoid m_intakePivot;
+  private final WPI_TalonSRX m_hopper;
+  private final WPI_TalonSRX m_conveyor;
+  private final WPI_TalonSRX m_elevator;
+  private final DoubleSolenoid m_intakePivot;
 
   public Indexer() {
     m_intake = new WPI_TalonSRX(Constants.IDindexerIntake);
-    m_front = new WPI_TalonSRX(Constants.IDindexerFront);
-    m_back = new WPI_TalonSRX(Constants.IDindexerBack);
+    m_hopper = new WPI_TalonSRX(Constants.IDindexerHopper);
+    m_conveyor = new WPI_TalonSRX(Constants.IDindexerConveyor);
+    m_elevator = new WPI_TalonSRX(Constants.IDindexerElevator);
 
-    m_back.setInverted(true);
-
-    m_intakePivot = new Solenoid(Constants.IDintakeExtender);
+    m_intake.setInverted(true);
+    m_hopper.setInverted(false);
+    m_conveyor.setInverted(false);
+    m_elevator.setInverted(true);
+    
+    m_intakePivot = new DoubleSolenoid(Constants.IDintakeForward, Constants.IDintakeReverse);
   }
 
   public double setIntake(double speed) {
@@ -38,15 +45,21 @@ public class Indexer extends SubsystemBase {
     return s;
   }
 
-  public double setFront(double speed) {
+  public double setHopper(double speed) {
     double s = Shortcuts.bound(speed, 1);
-    m_front.set(s);
+    m_hopper.set(s);
     return s;
   }
 
-  public double setBack(double speed) {
+  public double setConveyor(double speed) {
     double s = Shortcuts.bound(speed, 1);
-    m_back.set(s);
+    m_conveyor.set(s);
+    return s;
+  }
+
+  public double setElevator(double speed) {
+    double s = Shortcuts.bound(speed, 1);
+    m_elevator.set(s);
     return s;
   }
 
@@ -55,13 +68,14 @@ public class Indexer extends SubsystemBase {
   }
 
   public void deployIntake(boolean state) {
-    m_intakePivot.set(state);
+    m_intakePivot.set(state ? Value.kForward : Value.kReverse);
   }
 
   @Override
   public void periodic() {
     SmartDashboard.putNumber(getName() + " Intake Output", m_intake.getMotorOutputPercent());
-    SmartDashboard.putNumber(getName() + " Front Output", m_front.getMotorOutputPercent());
-    SmartDashboard.putNumber(getName() + " Back Output", m_back.getMotorOutputPercent());
+    SmartDashboard.putNumber(getName() + " Hopper Output", m_hopper.getMotorOutputPercent());
+    SmartDashboard.putNumber(getName() + " Conveyor Output", m_conveyor.getMotorOutputPercent());
+    SmartDashboard.putNumber(getName() + " Elevator Output", m_elevator.getMotorOutputPercent());
   }
 }

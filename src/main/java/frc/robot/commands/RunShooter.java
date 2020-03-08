@@ -10,19 +10,20 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Shooter;
 
-public class RunIndexer extends CommandBase {
-  
-  private final Indexer m_in;
-  private DoubleSupplier m_back;
-  private DoubleSupplier m_front;
+public class RunShooter extends CommandBase {
+  /**
+   * Creates a new RunShooter.
+   */
+  private final Shooter m_shooter;
+  private final DoubleSupplier m_shooterSpeed;
 
-  public RunIndexer(Indexer in, DoubleSupplier front, DoubleSupplier back) {
-    m_in = in;
-    m_front = front;
-    m_back = back;
-    addRequirements(in);
+  public RunShooter(Shooter shooter, DoubleSupplier shooterSpeed) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    m_shooter = shooter;
+    m_shooterSpeed = shooterSpeed;
+    addRequirements(shooter);
   }
 
   // Called when the command is initially scheduled.
@@ -33,13 +34,13 @@ public class RunIndexer extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_in.setConveyor(m_front.getAsDouble());
-    m_in.setElevator(m_back.getAsDouble());
+    m_shooter.setWheels(m_shooterSpeed.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_shooter.setWheels(0);
   }
 
   // Returns true when the command should end.

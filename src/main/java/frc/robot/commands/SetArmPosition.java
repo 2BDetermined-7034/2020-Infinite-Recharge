@@ -9,47 +9,62 @@ package frc.robot.commands;
 
 import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Climber;
 
-public class RunArm extends CommandBase {
-  
-  private final Climber m_climb;
-  private double m_target;
-  private final DoubleSupplier m_i;
+public class SetArmPosition extends CommandBase {
+  /**
+   * Creates a new SetArmPosition.
+   */
 
-  public RunArm(Climber climb, DoubleSupplier increment) {
+  private final Climber m_climb;
+  private final DoubleSupplier m_target;
+  private double m_currentTarget;
+
+  public SetArmPosition(Climber climb, DoubleSupplier target) {
+    // Use addRequirements() here to declare subsystem dependencies.
     m_climb = climb;
-    m_i = increment;
+    m_target = target;
     addRequirements(climb);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_target = m_climb.getArmPosition();
+    m_currentTarget = m_climb.getArmPosition();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_target = m_target+m_i.getAsDouble();
-    m_climb.setArmTargetWithBounds(m_target);
-    //new may need testing
-    m_climb.setWinch(m_i.getAsDouble()*.75);
-    SmartDashboard.putNumber(getName() + " Target", m_target);
+    double target = m_target.getAsDouble();
+    // If it's currently at its target, make it stay there
+    if(m_climb.getArmPosition() == target) m_currentTarget = m_climb.getArmPosition();
+
+    boolean runWinchUp = false;
+    boolean runWinchDown = false;
+
+    if(m_climb.getArmPosition() > target) {
+      m_currentTarget -= 1;
+      runWinchDown = true;
+    } else {
+      m_currentTarget += 1;
+      runWinchUp = true;
+    }
+    m_climb.setArmTargetWithBounds(m_currentTarget);
+    m_climb.setWinch(runWinchUp ? -.6 : runWinchDown ? .6 : 0);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     m_climb.stopArm();
-    //nwe may need tested
     m_climb.stopWinch();
   }
 
   // Returns true when the command should end.
   @Override
-  public boolean isFinished() { return m_climb.getArmTemperature() > 60; }
+  public boolean isFinished() {
+    return false;
+  }
 }

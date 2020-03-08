@@ -13,14 +13,17 @@ import java.util.Map;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
-public class ButtPan extends Joystick {
+/**
+ * Add your docs here.
+ */
+public abstract class AbstractButtonJoystick extends Joystick {
 
     private Map<Integer, JoystickButton> buttons;
 
-    public ButtPan(final int port) {
+    public AbstractButtonJoystick(final int port, int lowerBound, int upperBound) {
         super(port);
         buttons = new HashMap<>();
-        for(int i = 1; i <= 10; i++) {
+        for(int i = lowerBound; i <= upperBound; i++) {
             buttons.put(i, new JoystickButton(this, i));
         }
     }

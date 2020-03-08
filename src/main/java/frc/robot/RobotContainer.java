@@ -8,12 +8,16 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.limelight.CamMode;
 import frc.robot.commands.*;
+import frc.robot.controllers.GunnerPanel;
 import frc.robot.controllers.X3D;
 import frc.robot.controllers.gPad;
+//import frc.robot.controllers.gPad;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -21,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -44,6 +49,7 @@ public class RobotContainer {
   private final Command m_autoCommand;
 
   public final X3D m_X3D = new X3D(Constants.IDjoystick);
+  public final GunnerPanel m_gunnerPanel = new GunnerPanel(Constants.IDgunnerpanel);
   public final gPad m_gPad = new gPad(Constants.IDgamepad);
 
   /**
@@ -58,23 +64,25 @@ public class RobotContainer {
 
     SmartDashboard.putData("Toggle Compressor", new InstantCommand(() -> m_pneumatics.toggleCompressor()));
     SmartDashboard.putData("Change Lights", new InstantCommand(() -> m_limeLight.setLight()));
-    SmartDashboard.putData("Change Mode", new InstantCommand(() -> m_limeLight.setMode()));
+    SmartDashboard.putData("Change Mode", new InstantCommand(() -> m_limeLight.setMode(m_limeLight.getMode() == CamMode.VISION ? CamMode.DRIVERCAM : CamMode.VISION)));
     SmartDashboard.putData("Reset Pivot", new InstantCommand(() -> m_shooter.setPivotEncoder(0)));
     SmartDashboard.putData("Reset Arm", new InstantCommand(() -> m_climber.setArmEncoder(0)));
     SmartDashboard.putData("Reset Drivetrain", new InstantCommand(() -> m_drivetrain.setEncoders(0)));
     SmartDashboard.putData("Retract Shooter", new RetractShooter(m_shooter));
-    SmartDashboard.putNumber("Fly Wheel Speed", 0);
+    SmartDashboard.putNumber("Fly Wheel Speed", 1);
 
     m_autoCommand = new TestAuto(m_drivetrain, m_limeLight, m_shooter, m_indexer);
     // m_autoCommand = new DriveForCm(m_drivetrain, 130);
 
-    m_drivetrain.setDefaultCommand(new Drive(m_drivetrain, () -> Shortcuts.deadZone(-m_X3D.getY(), 0.1),
-        () -> Shortcuts.deadZone(m_X3D.getX(), 0.1), () -> m_X3D.getRawButtonPressed(2)));
-    m_indexer.setDefaultCommand(
-        new RunIndexer(m_indexer, () -> m_gPad.getX(Hand.kLeft) * .75, () -> -m_gPad.getY(Hand.kLeft) * .75));
+    m_drivetrain.setDefaultCommand(new Drive(m_drivetrain, () -> Shortcuts.deadZone(-m_X3D.getAxis("Y"), 0.1),
+        () -> Shortcuts.deadZone(m_X3D.getAxis("X"), 0.1), () -> m_X3D.getRawButtonPressed(2)));
+    //m_indexer.setDefaultCommand(
+    //    new RunIndexer(m_indexer, () -> m_gPad.getAxis("LX") * .75, () -> -m_gPad.getAxis("LY") * .75));
+    m_indexer.setDefaultCommand(new RunIndexer(m_indexer, () -> m_gunnerPanel.getIndexerHorizontalPower(), () -> m_gunnerPanel.getIndexerElevatorPower()));
     // m_level.setDefaultCommand(new RunLeveler(m_level, () ->
     // m_gPad.getTriggerAxis(Hand.kRight)-m_gPad.getTriggerAxis(Hand.kLeft)));
-    m_shooter.setDefaultCommand(new RunCommand(() -> m_shooter.setPivotTarget(0), m_shooter));
+    //m_shooter.setDefaultCommand(new RunCommand(() -> m_shooter.setPivotTarget(0), m_shooter));
+    m_shooter.setDefaultCommand(new ManualPivot(m_shooter, () -> m_gunnerPanel.getAxisPercent("pitch")));
 
     configureButtonBindings();
   }
@@ -89,14 +97,17 @@ public class RobotContainer {
     PrintCommand printCmd = new PrintCommand("WARNING ==ROBOT SELF-DESTRUCT SEQUENCE INITIATED==");
     // Command runArm = new RunArm(m_neoTest, () ->
     // m_gPad.getTriggerAxis(Hand.kLeft), () -> m_gPad.getTriggerAxis(Hand.kRight));
-
-    m_X3D.getButton(6).whenPressed(new SetBreak(m_climber, true));
-    m_X3D.getButton(4).whenPressed(new SetBreak(m_climber, false));
-    m_X3D.getButton(8).whenPressed(new RaiseArm(m_climber));
-    m_X3D.getButton(5).whileHeld(new RunWinch(m_climber, () -> -1));
-    m_X3D.getButton(7).whileHeld(new RunWinch(m_climber, () -> .6));
-    m_X3D.getButton(1).whileHeld(new SwoleMode(m_drivetrain));
-    m_X3D.getButton(3).toggleWhenPressed(new VisAlign(m_drivetrain, m_shooter, m_limeLight, 
+    m_X3D.getJoystickButton("3").whenPressed(new InstantCommand(() -> m_indexer.deployIntake(true)));
+    m_X3D.getJoystickButton("4").whenPressed(new InstantCommand(() -> m_indexer.deployIntake(false)));
+    //m_X3D.getJoystickButton(6).whenPressed(new SetBreak(m_climber, true));
+    //m_X3D.getJoystickButton(4).whenPressed(new SetBreak(m_climber, false));
+    m_gunnerPanel.getJoystickButton("armstoggle").whenPressed(new ToggleArm(m_climber, true));
+    m_gunnerPanel.getJoystickButton("armstoggle").whenReleased(new ToggleArm(m_climber, false));
+    m_gunnerPanel.getJoystickButton("winchup").whileHeld(new RunWinch(m_climber, () -> -1));
+    m_gunnerPanel.getJoystickButton("winchdown").whileHeld(new RunWinch(m_climber, () -> .6));
+    //m_gunnerPanel.getJoystickButton("armstoggle").toggleWhenActive(new SetArmPosition(m_climber, () -> (Constants.Arm_MaxAngle - Constants.Arm_MinAngle) * m_gunnerPanel.getAxisPercent("arms")));
+    m_X3D.getJoystickButton(11).whileHeld(new SwoleMode(m_drivetrain));
+    m_X3D.getJoystickButton(3).toggleWhenPressed(new VisAlign(m_drivetrain, m_shooter, m_limeLight, 
       () -> true, () -> (Math.abs(m_X3D.getX()) > .4)
     ));
     
@@ -104,19 +115,37 @@ public class RobotContainer {
     //m_X3D.getButton(8).whenPressed(new RetractShooter(m_shooter));
     //x3D_B3.toggleWhenPressed(new RunArm(m_climber, () -> (1-m_X3D.getThrottle())/2));
     //x3D_B7.whenPressed(() -> m_climber.resetArmEncoder());
-    m_X3D.getButton(12).whenPressed(printCmd);
+    m_X3D.getJoystickButton(12).whenPressed(printCmd);
+    m_gunnerPanel.getJoystickButton("intakein").whileHeld(new RunIntake(m_indexer, () -> -Constants.IndexIntake_Output));
+    m_gunnerPanel.getJoystickButton("intakeout").whileHeld(new RunIntake(m_indexer, () -> Constants.IndexIntake_Output));
+    m_gunnerPanel.getJoystickButton("intakein").whenPressed(new InstantCommand(() -> m_indexer.setHopper(.25)));
+    m_gunnerPanel.getJoystickButton("intakein").whenReleased(new InstantCommand(() -> m_indexer.setHopper(0)));
+    //Fm_gPad.getJoystickButton("X").whenPressed(new InstantCommand(() -> m_shooter.setWheels(SmartDashboard.getNumber("Fly Wheel Speed", 0))));
+    //Fm_gPad.getJoystickButton("X").whenReleased(new InstantCommand(() -> m_shooter.setWheels(0)));
+    //Fm_gPad.getJoystickButton("Y").toggleWhenPressed(new RunArm(m_climber, () -> 2*(m_gPad.getAxis("LTrigger")-m_gPad.getAxis("RTrigger"))));
+    m_gunnerPanel.getJoystickButton("intakeretract").whenPressed(new InstantCommand(() -> m_indexer.deployIntake(true)));
+    m_gunnerPanel.getJoystickButton("intakeretract").whenReleased(new InstantCommand(() -> m_indexer.deployIntake(false)));
+    m_gunnerPanel.getJoystickButton("fire").whileHeld(new RunShooter(m_shooter, () -> m_gunnerPanel.getAxisPercent("speed")));
+    //Fm_gPad.getJoystickButton("RSB").toggleWhenPressed(new ManualPivot(m_shooter, () -> (1+m_X3D.getAxis("THROTTLE"))/2));
+
+    /*
+    m_gPad.getJoystickButton("A").whileHeld(new RunIntake(m_indexer, () -> Constants.IndexIntake_Output));
+    m_gPad.getJoystickButton("B").whileHeld(new RunIntake(m_indexer, () -> -Constants.IndexIntake_Output));
+    m_gPad.getJoystickButton("X").whenPressed(new InstantCommand(() -> m_shooter.setWheels(SmartDashboard.getNumber("Fly Wheel Speed", 0))));
+    m_gPad.getJoystickButton("X").whenReleased(new InstantCommand(() -> m_shooter.setWheels(0)));
+    m_gPad.getJoystickButton("Y").toggleWhenPressed(new RunArm(m_climber, () -> 2*(m_gPad.getAxis("LTrigger")-m_gPad.getAxis("RTrigger"))));
+    m_gPad.getJoystickButton("START").whenPressed(new InstantCommand(() -> m_indexer.deployIntake(true)));
+    m_gPad.getJoystickButton("BACK").whenPressed(new InstantCommand(() -> m_indexer.deployIntake(false)));
+    m_gPad.getJoystickButton("RSB").toggleWhenPressed(new ManualPivot(m_shooter, () -> (1+m_X3D.getAxis("THROTTLE"))/2));
+    m_gPad.getJoystickButton("LB").whileHeld(new InstantCommand(() -> m_indexer.setHopper(.25)));
+    m_gPad.getJoystickButton("RB").whileHeld(new InstantCommand(() -> m_indexer.setHopper(0)));
+    m_gPad.getJoystickButton("LSB").whenPressed(printCmd);
+    */
+
     
-    m_gPad.getButton("A").whileHeld(new RunIntake(m_indexer, () -> Constants.IndexIntake_Output));
-    m_gPad.getButton("B").whileHeld(new RunIntake(m_indexer, () -> -Constants.IndexIntake_Output));
-    m_gPad.getButton("X").whenPressed(new InstantCommand(() -> m_shooter.setWheels(SmartDashboard.getNumber("Fly Wheel Speed", 0))));
-    m_gPad.getButton("X").whenReleased(new InstantCommand(() -> m_shooter.setWheels(0)));
-    m_gPad.getButton("Y").toggleWhenPressed(new RunArm(m_climber, () -> 2*(m_gPad.getAxis("LTrigger")-m_gPad.getAxis("RTrigger"))));
-    m_gPad.getButton("START").whenPressed(new InstantCommand(() -> m_indexer.deployIntake(true)));
-    m_gPad.getButton("BACK").whenPressed(new InstantCommand(() -> m_indexer.deployIntake(false)));
-    m_gPad.getButton("RSB").toggleWhenPressed(new ManualPivot(m_shooter, () -> (1+m_X3D.getThrottle())/2));
-    //m_gPad.getButton("LB").whileHeld(new RunLeveler(m_leveler, () -> -1));
-    //m_gPad.getButton("RB").whileHeld(new RunLeveler(m_leveler, () -> 1));
-    m_gPad.getButton("LSB").whenPressed(printCmd);
+    //(new JoystickButton(m_gPad, 1)).whenPressed(new InstantCommand(() -> m_shooter.setWheels(SmartDashboard.getNumber("Fly Wheel Speed", 0))));
+    //(new JoystickButton(m_gPad, 1)).whenReleased(new InstantCommand(() -> m_shooter.setWheels(0)));
+    //(new JoystickButton(m_gPad, 2)).toggleWhenPressed(new ManualPivot(m_shooter, () -> (1+m_X3D.getThrottle())/2));
   }
 
   /**

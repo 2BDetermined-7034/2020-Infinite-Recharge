@@ -13,6 +13,7 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.Shortcuts;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.Constants;
 
@@ -49,6 +50,7 @@ public class Drive extends CommandBase {
   public void execute() {
     if (m_invert.getAsBoolean()) { inverted = !inverted; }
     m_dt.drive((inverted ? 1 : -1) * m_driveY.getAsDouble(), m_driveX.getAsDouble());
+    //Shortcuts.print(String.valueOf(m_driveY.getAsDouble()));
   }
 
   // Called once after isFinished returns true

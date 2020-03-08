@@ -4,7 +4,7 @@
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
-
+/*
 package frc.robot.commands;
 
 import java.util.function.DoubleSupplier;
@@ -16,9 +16,7 @@ public class RunLeveler extends CommandBase {
   private Leveler m_l;
   private DoubleSupplier m_speed;
 
-  /**
-   * Creates a new RunLeveler.
-   */
+  
   public RunLeveler(Leveler l, DoubleSupplier speed) {
     m_l = l;
     m_speed = speed;
@@ -48,3 +46,4 @@ public class RunLeveler extends CommandBase {
     return false;
   }
 }
+*/
