@@ -10,16 +10,11 @@ package frc.robot.commands;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.Shortcuts;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.Constants;
 
 public class Drive extends CommandBase {
-
-  private double RPM;
 
   private final Drivetrain m_dt;
 
@@ -37,31 +32,27 @@ public class Drive extends CommandBase {
     addRequirements(dt);
   }
 
-  // Called just before this Command runs the first time
+  // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
     m_dt.setGear(Constants.HIGH_GEAR);
     inverted = false;
   }
 
-  // Called repeatedly when this Command is scheduled to run
+  // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     if (m_invert.getAsBoolean()) { inverted = !inverted; }
-    m_dt.drive((inverted ? 1 : -1) * m_driveY.getAsDouble(), m_driveX.getAsDouble());
-    //Shortcuts.print(String.valueOf(m_driveY.getAsDouble()));
+    m_dt.drive((inverted ? 1 : -1) * m_driveY.getAsDouble(), m_driveX.getAsDouble()); 
   }
 
-  // Called once after isFinished returns true
+  // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    m_dt.autoDrive(0, 0);
+  public void end(boolean interrupted) { 
+    m_dt.autoDrive(0, 0); 
   }
 
-  // Make this return true when this Command no longer needs to run execute()
+  // Returns true when the command should end.
   @Override
-  public boolean isFinished() {
-    return false;
-  }
+  public boolean isFinished() { return false; }
 }

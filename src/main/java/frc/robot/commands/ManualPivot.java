@@ -38,7 +38,7 @@ public class ManualPivot extends CommandBase {
   public void execute() {
     double p = MathUtil.clamp(m_percent.getAsDouble(), 0, 1);
     double t = Shortcuts.squeeze(p, Constants.ShootPiv_MinAngle, Constants.ShootPiv_MaxAngle);
-
+    
     m_shoot.setPivotTarget(t, false);
 
     SmartDashboard.putNumber(getName() + " Target", t);

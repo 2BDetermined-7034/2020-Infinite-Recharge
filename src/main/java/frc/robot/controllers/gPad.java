@@ -12,14 +12,29 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
-public class gPad extends EpicHID {
+public class gPad extends Joystick {
 
-    public static final String[] buttonNames = {"a","b","x","y","lb","rb","back","start","lsb","rsb"};
-    public static final String[] axisNames = {"lx","ly","ltrigger","rtrigger","rx","ry"};
+    private Map<String, JoystickButton> buttons;
+    private ArrayList<String> axes;
 
     public gPad(final int port) {
-        super(port, buttonNames, axisNames);
+        super(port);
+        buttons = new HashMap<>();
+        String[] buttonNames = {"A","B","X","Y","LB","RB","BACK","START","LSB","RSB"};
+        for(int i = 1; i <= 10; i++) {
+            buttons.put(buttonNames[i-1], new JoystickButton(this, i));
+        }
+        axes = new ArrayList<>(Arrays.asList("LX","LY","LTrigger","RTrigger","RX","RY"));
+    }
+
+    public JoystickButton getButton(String buttonName) {
+        return buttons.get(buttonName);
+    }
+
+    public double getAxis(String axisName) {
+        return getRawAxis(axes.indexOf(axisName));
     }
 }

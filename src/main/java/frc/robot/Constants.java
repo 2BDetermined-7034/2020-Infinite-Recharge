@@ -7,8 +7,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean constants. This class should not be used for any other
@@ -21,38 +19,36 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
  */
 public final class Constants {
     //talonSRX
-    public static final int IDindexerIntake = 3;
-    public static final int IDindexerHopper = 5;
-    public static final int IDindexerConveyor = 4;
-    public static final int IDindexerElevator = 1;
-    public static final int IDshooterWheelL = 0;
-    public static final int IDshooterWheelR = 2;
+    public static final int IDshooterWheels = 2;
 
+    public static final int IDindexerIntake = 5;
+    public static final int IDindexerFront = 4;
+    public static final int IDindexerBack = 1;
+  
     //sparkMAX
-    public static final int IDdriveL1 = 3;
-    public static final int IDdriveL2 = 1;
+    public static final int IDdriveR1 = 1;
+    public static final int IDdriveR2 = 2;
+    public static final int IDdriveR3 = 3;
+    public static final int IDdriveL1 = 4;
+    public static final int IDdriveL2 = 5;
     public static final int IDdriveL3 = 6;
-    public static final int IDdriveR1 = 2;
-    public static final int IDdriveR2 = 5;
-    public static final int IDdriveR3 = 4;
-    //switch 8 and 9
-    public static final int IDshooterPivot = 8;
-    public static final int IDarm = 9;
-    public static final int IDwinch = 7;
 
-    //pneumatics
-    public static final int IDcompressor = 0;
-    public static final int IDshifterHigh = 1;
-    public static final int IDshifterLow = 0;
-    public static final int IDintakeForward = 3;
-    public static final int IDintakeReverse = 2;
-    public static final int IDarmHookErector = 4;
+    public static final int IDshooterPivot = 9;
+
+    public static final int IDarm = 10;
+    public static final int IDwinch = 7;
+    public static final int IDlevelerTrolley = 8;
 
     //controllers
     public static final int IDjoystick = 0;
-    public static final int IDgunnerpanel = 1;
-    public static final int IDgamepad = 2;
-
+    public static final int IDgamepad = 1;
+  
+    //pneumatics
+    public static final int IDcompressor = 0;
+    public static final int[] IDwinchBrake = {2, 3};
+    public static final int IDshifter = 4;
+    public static final int IDintakeExtender = 5;
+    
     //sensors
 
     //PDP
@@ -81,15 +77,15 @@ public final class Constants {
     public static final double ShootPiv_kI = 0;
     public static final double ShootPiv_kD = 0;
     public static final double ShootPiv_kGrav = 0;
-    public static final double ShootPiv_DegreesPerRot = 1;
+    public static final double ShootPiv_DegreesPerRot = 0.95;
     public static final double ShootPiv_MaxOutput = .4;
     public static final double ShootPiv_MaxAngle = 100;
-    public static final double ShootPiv_MinAngle = 2;
-    public static final double ShootPiv_PosThreshold = 2;;
+    public static final double ShootPiv_MinAngle = 0;
+    public static final double ShootPiv_PosThreshold = 2;
     public static final double ShootPiv_SoftCurrentLimit = .4;
     public static final double ShootPiv_HardCurrentLimit = 8;
-	public static final double ShootFly_kP = 1;
     public static final double ShootFly_VkP = 1;
+    
     //Vision Allignment
     public static final double VisX_kP = 1;
     public static final double VisX_MAX = .3;
@@ -104,6 +100,7 @@ public final class Constants {
     public static int Vis_TimerConfidence = 10;
     public static final double Vis_LLHeight = .2;
     public static final double Vis_LLAngle = 27.2;
+
 
     //Indexer
     public static final double IndexIntake_SoftCurrentLimit = 25;
@@ -132,9 +129,9 @@ public final class Constants {
     //Arm
     public static final double Arm_MinAngle = 0;
     public static final double Arm_MaxAngle = 110;
-    public static final double Arm_MaxOutput = .35;
-    public static final int Arm_SoftCurrentLimit = 40;
-    public static final int Arm_HardCurrentLimit = 60;
+    public static final double Arm_MaxOutput = .5;
+    public static final double Arm_SoftCurrentLimit = .5;
+    public static final double Arm_HardCurrentLimit = 60;
     public static final double Arm_DegreesPerRot = 7.667;
     public static final double Arm_kP = .05;
     public static final double Arm_kI = 0;
@@ -145,7 +142,7 @@ public final class Constants {
 
     //Winch
     public static final int Winch_HardCurrentLimit = 60;
-
+    
     //Conversions
     public static final double CM_PER_IN = 2.54;
 }

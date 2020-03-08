@@ -4,7 +4,7 @@
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
-/*
+
 package frc.robot.subsystems;
 
 import com.revrobotics.CANEncoder;
@@ -21,6 +21,9 @@ public class Leveler extends SubsystemBase {
   private CANSparkMax m_trolley;
   private CANEncoder m_trolleyEnc;
 
+  /**
+   * Creates a new Leveler.
+   */
   public Leveler() {
     //Initialization
     m_trolley = new CANSparkMax(Constants.IDlevelerTrolley, MotorType.kBrushless);
@@ -53,4 +56,3 @@ public class Leveler extends SubsystemBase {
     SmartDashboard.putNumber(getName() + " Trolley Position", getTrolleyPosition());
   }
 }
-*/

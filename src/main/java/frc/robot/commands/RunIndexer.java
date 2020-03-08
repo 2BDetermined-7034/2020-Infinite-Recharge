@@ -33,8 +33,8 @@ public class RunIndexer extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_in.setConveyor(m_front.getAsDouble());
-    m_in.setElevator(m_back.getAsDouble());
+    m_in.setFront(m_front.getAsDouble());
+    m_in.setBack(m_back.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.

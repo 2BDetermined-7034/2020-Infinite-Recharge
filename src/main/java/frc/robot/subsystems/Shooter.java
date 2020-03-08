@@ -7,7 +7,6 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANEncoder;
@@ -26,29 +25,23 @@ import frc.robot.Shortcuts;
 
 public class Shooter extends SubsystemBase {
 
-  private final WPI_TalonSRX m_wheelL;
-  private final WPI_TalonSRX m_wheelR;
+  private final WPI_TalonSRX m_wheel;
   private final CANSparkMax m_pivot;
   private final CANEncoder m_pivotEnc;
   private final CANPIDController m_pivotPID;
 
   public Shooter() {
-    m_wheelL = new WPI_TalonSRX(Constants.IDshooterWheelL);
-    m_wheelR = new WPI_TalonSRX(Constants.IDshooterWheelR);
+    m_wheel = new WPI_TalonSRX(Constants.IDshooterWheels);
 
     m_pivot = new CANSparkMax(Constants.IDshooterPivot, CANSparkMaxLowLevel.MotorType.kBrushless);
+    m_pivot.setInverted(true);
     m_pivotEnc = m_pivot.getEncoder();
     m_pivotPID = m_pivot.getPIDController();
 
-    m_wheelR.setInverted(false);
-    m_wheelL.setInverted(false);
-    m_wheelL.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 50, 50, .5));
-    m_wheelR.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 50, 50, .5));
+    // m_right.setInverted(true);
+    m_wheel.setInverted(true);
+    m_wheel.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 30, 30, .5));
 
-    m_wheelL.config_kP(0, Constants.ShootFly_kP);
-    m_wheelR.config_kP(0, Constants.ShootFly_kP);
-
-    m_pivot.setInverted(false);
     m_pivotEnc.setPositionConversionFactor(Constants.ShootPiv_DegreesPerRot);
     m_pivotPID.setP(Constants.ShootPiv_kP);
     m_pivotPID.setI(Constants.ShootPiv_kI);
@@ -58,8 +51,8 @@ public class Shooter extends SubsystemBase {
   }
 
   //Getters for the flywheels
-  public double getWheelsOutput() { return m_wheelL.get(); }
-  public double getWheelsCurrent() { return m_wheelL.getSupplyCurrent(); }
+  public double getWheelsOutput() { return m_wheel.get(); }
+  public double getWheelsCurrent() { return m_wheel.getSupplyCurrent(); }
 
   //Getters for the pivot
   public double getPivotOutput() { return m_pivot.getAppliedOutput(); }
@@ -75,13 +68,7 @@ public class Shooter extends SubsystemBase {
 
   //Sets the flywheels output
   public void setWheels(double output) {
-    m_wheelR.set(Shortcuts.bound(output, 1));
-    m_wheelL.set(Shortcuts.bound(output, 1));
-  }
-
-  public void setWheelsV(double output) {
-    m_wheelR.set(ControlMode.Velocity, output*120000);
-    m_wheelL.set(ControlMode.Velocity, output*-120000);
+    m_wheel.set(Shortcuts.bound(output, 1));
   }
 
   public void setPivot(double output) {
@@ -118,11 +105,11 @@ public class Shooter extends SubsystemBase {
 
   public void setPivotEncoder(double correctAngle) {
     m_pivotEnc.setPosition(correctAngle);
+    Shortcuts.print("bruh");
   }
 
   public void stopWheels() {
-    m_wheelR.stopMotor();
-    m_wheelL.stopMotor();
+    m_wheel.stopMotor();
   }
 
   public void stopPivot() {
@@ -135,8 +122,6 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber(getName() + " Pivot Position", getPivotPosition());
     SmartDashboard.putNumber(getName() + " Pivot Output", getPivotOutput());
     SmartDashboard.putNumber(getName() + " Pivot Current", getPivotCurrent());
-    SmartDashboard.putNumber(getName() + " Right Wheel Velocity", m_wheelR.getSelectedSensorVelocity());
-    SmartDashboard.putNumber(getName() + " Left Wheel Velocity", m_wheelL.getSelectedSensorVelocity());
     SmartDashboard.putNumber(getName() + " Pivot Velocity", getPivotVelocity());
   }
 }

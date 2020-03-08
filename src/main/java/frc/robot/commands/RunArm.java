@@ -36,8 +36,6 @@ public class RunArm extends CommandBase {
   public void execute() {
     m_target = m_target+m_i.getAsDouble();
     m_climb.setArmTargetWithBounds(m_target);
-    //new may need testing
-    m_climb.setWinch(m_i.getAsDouble()*.75);
     SmartDashboard.putNumber(getName() + " Target", m_target);
   }
 
@@ -45,8 +43,6 @@ public class RunArm extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_climb.stopArm();
-    //nwe may need tested
-    m_climb.stopWinch();
   }
 
   // Returns true when the command should end.

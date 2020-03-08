@@ -7,12 +7,26 @@
 
 package frc.robot.controllers;
 
-public class X3D extends EpicHID {
+import java.util.HashMap;
+import java.util.Map;
 
-    public static final String[] button = {"trigger","2","3","4","5","6","7","8","9","10","11","12"};
-    public static final String[] axisNames = {"x","y","twist","throttle"};
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
-    public X3D(int port) {
-        super(port, button, axisNames);
+public class X3D extends Joystick {
+
+    private Map<Integer, JoystickButton> buttons;
+
+    public X3D(final int port) {
+        super(port);
+        buttons = new HashMap<>();
+        for(int i = 1; i <= 12; i++) {
+            buttons.put(i, new JoystickButton(this, i));
+        }
     }
+
+    public JoystickButton getButton(int buttonID) {
+        return buttons.get(buttonID);
+    }
+
 }
