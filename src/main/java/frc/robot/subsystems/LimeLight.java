@@ -12,15 +12,15 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.limelight.CamMode;
+import frc.robot.Constants;
 
 public class LimeLight extends SubsystemBase {
   
   private final NetworkTable m_table;
-  private int lightMode;
 
   public LimeLight() {
     m_table = NetworkTableInstance.getDefault().getTable("limelight");
-    lightMode = 3;
+    setLights(false);
   }
 
   public double getXAngle() { return m_table.getEntry("tx").getDouble(0); }
@@ -39,15 +39,22 @@ public class LimeLight extends SubsystemBase {
     m_table.getEntry("camMode").setNumber(camMode.getNetworkTableValue());
   }
 
-  public void setLight() { 
-    m_table.getEntry("ledMode").setNumber((lightMode == 3) ? 1 : 3);
-    lightMode = (lightMode==3) ? 1 : 3;
+  public void setLights(boolean on) { 
+    m_table.getEntry("ledMode").setNumber(on ? 3 : 1);
+  }
+
+  public double getEstimatedDistance() {
+    return 2.494*Math.pow(Math.tan(Math.toRadians(Constants.Vis_LLAngle+getYAngle())), -1);
   }
 
   @Override
   public void periodic() {
+    if(getCurrentCommand() == null) {
+      setLights(true);
+    }
     SmartDashboard.putNumber(getName() + " X Angle", getXAngle());
-    SmartDashboard.putNumber(getName() + " Y Angle", getYAngle());
-    SmartDashboard.putBoolean(getName() + " Detected", getDetected());
+    SmartDashboard.putNumber(getName() + " Y Angle---------------", getYAngle());
+    //SmartDashboard.putBoolean(getName() + " Detected", getDetected());
+    //SmartDashboard.putNumber(getName() + " Distance", getEstimatedDistance());
   }
 }

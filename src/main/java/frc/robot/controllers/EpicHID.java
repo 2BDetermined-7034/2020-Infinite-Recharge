@@ -37,18 +37,18 @@ public class EpicHID extends GenericHID {
     }
 
     public JoystickButton getJoystickButton(String name) {
-        return m_joyButtons.get(name.toLowerCase());
+        return m_joyButtons.get(name.toUpperCase());
     }
     public JoystickButton getJoystickButton(int id) {
         return getJoystickButton(m_digitalInputs.get(id-1));
     }
 
     public boolean getRawButton(String name) {
-        return getRawButton(m_digitalInputs.indexOf(name.toLowerCase())+1);
+        return getRawButton(m_digitalInputs.indexOf(name.toUpperCase())+1);
     }
 
     public double getAxis(String name) {
-        return getRawAxis(m_analogInputs.indexOf(name.toLowerCase()));
+        return getRawAxis(m_analogInputs.indexOf(name.toUpperCase()));
     }
 
     

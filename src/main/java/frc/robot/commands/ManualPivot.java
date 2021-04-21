@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Constants;
 import frc.robot.Shortcuts;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shooter;
 
 public class ManualPivot extends CommandBase {
@@ -22,9 +23,12 @@ public class ManualPivot extends CommandBase {
 
   private final DoubleSupplier m_percent;
 
-  public ManualPivot(Shooter shooter, DoubleSupplier percent) {
+  private Drivetrain m_dt;
+
+  public ManualPivot(Shooter shooter, Drivetrain dt, DoubleSupplier percent) {
     m_shoot = shooter;
     m_percent = percent;
+    m_dt = dt;
     addRequirements(shooter);
   }
 
@@ -39,7 +43,7 @@ public class ManualPivot extends CommandBase {
     double p = MathUtil.clamp(m_percent.getAsDouble(), 0, 1);
     double t = Shortcuts.squeeze(p, Constants.ShootPiv_MinAngle, Constants.ShootPiv_MaxAngle);
 
-    m_shoot.setPivotTarget(t, false);
+    m_shoot.setPivotTarget(t);
 
     SmartDashboard.putNumber(getName() + " Target", t);
   }
@@ -52,6 +56,6 @@ public class ManualPivot extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_shoot.getPivotTemp() > 60;
+    return m_shoot.getPivotTemp() > 60 || Math.abs(m_dt.getAverageVelocity()) > 500;
   }
 }

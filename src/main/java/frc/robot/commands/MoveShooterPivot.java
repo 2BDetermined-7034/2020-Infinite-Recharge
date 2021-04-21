@@ -11,42 +11,42 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Shooter;
 
-public class RetractShooter extends CommandBase {
-
+public class MoveShooterPivot extends CommandBase {
   private Shooter m_shooter;
+  private double m_target;
+  private double m_position;
+  private double m_error;
 
   /**
-   * Creates a new RetractShooter.
+   * Creates a new MoveShooterPivot.
    */
-  public RetractShooter(Shooter shooter) {
+  public MoveShooterPivot(Shooter shooter, double targetInDegrees) {
     m_shooter = shooter;
+    m_target = targetInDegrees;
     addRequirements(shooter);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_shooter.stopWheels();
+    m_shooter.setPivotTarget(m_target);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooter.setPivot(-.2);
+    m_position = m_shooter.getPivotPosition();
+    m_error = m_position - m_target;
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_shooter.stopPivot();
-    if(!interrupted) {
-      m_shooter.setPivotEncoder(0);
-    }
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_shooter.getPivotCurrent() >= Constants.ShootPiv_SoftCurrentLimit;
+    return Math.abs(m_error) < Constants.ShootPiv_PosThreshold;
   }
 }

@@ -31,7 +31,7 @@ public class Indexer extends SubsystemBase {
     m_conveyor = new WPI_TalonSRX(Constants.IDindexerConveyor);
     m_elevator = new WPI_TalonSRX(Constants.IDindexerElevator);
 
-    m_intake.setInverted(true);
+    m_intake.setInverted(false);
     m_hopper.setInverted(false);
     m_conveyor.setInverted(false);
     m_elevator.setInverted(true);
@@ -69,6 +69,13 @@ public class Indexer extends SubsystemBase {
 
   public void deployIntake(boolean state) {
     m_intakePivot.set(state ? Value.kForward : Value.kReverse);
+  }
+
+  public void stop() {
+    setIntake(0);
+    setHopper(0);
+    setConveyor(0);
+    setElevator(0);
   }
 
   @Override

@@ -5,12 +5,14 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.auto;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.*;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.LimeLight;
@@ -36,6 +38,8 @@ public class TestAuto extends SequentialCommandGroup {
           new InstantCommand(() -> shooter.setPivotTarget(0)),
           new RunShooterWheels(shooter, () -> 0)
           );*/
+
+    /*
     super(new ParallelCommandGroup(
             new InstantCommand(() -> shooter.setWheels(.9)),
             new VisAlign(dt, shooter, ll, () -> false, () -> false),
@@ -48,5 +52,20 @@ public class TestAuto extends SequentialCommandGroup {
             new InstantCommand(() -> shooter.setWheels(0))
             //new DriveForCm(dt, 50)
             );
+    */
+    super(
+      new InstantCommand(() -> shooter.setWheels(.70)),
+      new ParallelRaceGroup(
+        new VisAlign(dt, shooter, ll, () -> true, () -> false, () -> 0),
+        new SequentialCommandGroup(
+          new WaitCommand(1),
+          new InstantCommand(() -> indexer.setHopper(1)),
+          new RunIndexer(indexer, () -> .2, () -> 1).withTimeout(2)
+        )
+      ),
+      new InstantCommand(() -> shooter.setPivotTarget(0)),
+      new InstantCommand(() -> shooter.setWheels(0)),
+      new DriveForCm(dt, 150, .2)
+    );
   }
 }

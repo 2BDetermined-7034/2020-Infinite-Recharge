@@ -8,10 +8,12 @@
 package frc.robot.commands;
 
 import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.Shortcuts;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.LimeLight;
 import frc.robot.subsystems.Shooter;
@@ -24,6 +26,7 @@ public class VisAlign extends CommandBase {
 
   private BooleanSupplier m_vis;
   private BooleanSupplier m_interrupt;
+  private DoubleSupplier m_drive;
 
   private boolean tapeDetected;
 
@@ -34,14 +37,15 @@ public class VisAlign extends CommandBase {
   private double targetY;
   private double targetX_L;
   private double targetX_R;
-  private double distance;
+  //private double distance;
   
-  public VisAlign(Drivetrain dt, Shooter shooter, LimeLight ll, BooleanSupplier useVision, BooleanSupplier interrupt) {
+  public VisAlign(Drivetrain dt, Shooter shooter, LimeLight ll, BooleanSupplier useVision, BooleanSupplier interrupt, DoubleSupplier drive) {
     m_dt = dt;
     m_ll = ll;
     m_shoot = shooter;
     m_vis = useVision;
     m_interrupt = interrupt;
+    m_drive = drive;
     addRequirements(dt);
     addRequirements(shooter);
     addRequirements(ll);
@@ -52,8 +56,8 @@ public class VisAlign extends CommandBase {
   public void initialize() {
     tapeDetected = false;
     tapeTimer = 0;
-    distance = 0.0254*Constants.VisY_distanceConstant/m_ll.getArea();
-    targetY = 60;
+    //distance = m_ll.getEstimatedDistance();
+    targetY = 45;
     targetX_L = m_dt.getPositionL();
     targetX_R = m_dt.getPositionR();
     errorY = 0;
@@ -63,8 +67,11 @@ public class VisAlign extends CommandBase {
   // Called repeatedly when this Command is scheduled to run
   @Override
   public void execute() {
+    m_ll.setLights(true);
     boolean vis = m_vis.getAsBoolean();
     tapeDetected = m_ll.getDetected();
+    double drive = m_drive.getAsDouble();
+    boolean liteMode = Shortcuts.deadZone(drive, .1) != 0;
 
     if(tapeDetected) {
       tapeTimer++;
@@ -74,30 +81,50 @@ public class VisAlign extends CommandBase {
     }
 
     if (tapeTimer >= Constants.Vis_TimerConfidence && vis) {
-      double visY = m_ll.getYAngle() + Constants.VisY_Offset;
+      double visY = m_ll.getYAngle();
       double visX = m_ll.getXAngle() + Constants.VisX_Offset;
       double visA = m_ll.getArea();
-      errorY = visY;
-      errorX = visX;
-
+      double distance = m_ll.getEstimatedDistance();
+      
       targetX_L = m_dt.getPositionL() + visX;
       targetX_R = m_dt.getPositionR() + visX;
-      targetY = m_shoot.getPivotPosition() - visY;
+      //targetY = .8*Math.toDegrees(Math.atan(.7*(distance+1)));
+      targetY = 90-(visY+Constants.Vis_LLAngle);
+
+
+      errorX = visX;
+      errorY = m_shoot.getPivotPosition() - targetY;
 
       double n = 3;
       double distanceNow = 0.0254*Constants.VisY_distanceConstant/visA;
-      distance = (n*distance + distanceNow)/(n+1);
-    } else {}
+      
+    } else {
 
-    m_dt.setPositionTarget(targetX_L, targetX_R);
+    }
+
+    if(liteMode) {
+      //m_dt.setGear(Constants.HIGH_GEAR);
+      m_dt.drive(drive, errorX/20);
+      targetX_L = m_dt.getPositionL();
+      targetX_R = m_dt.getPositionR();
+    }
+    else {
+      m_dt.setGear(Constants.LOW_GEAR);
+      m_dt.setPositionTarget(targetX_L, targetX_R);
+    }
+    
+
+
     m_shoot.setPivotTarget(targetY);
 
-    SmartDashboard.putNumber(getName() + " Distance", distance/0.0254);
+    SmartDashboard.putNumber("BRUHBRUHBRUH", targetY);
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   public boolean isFinished() {
+    
+    
     return m_interrupt.getAsBoolean();
     /*
     (tapeTimer >= Constants.Vis_TimerConfidence)
@@ -111,5 +138,6 @@ public class VisAlign extends CommandBase {
   // Called once after isFinished returns true
   @Override
   public void end(boolean interrupted) {
+    m_dt.setGear(Constants.HIGH_GEAR);
   }
 }

@@ -52,7 +52,7 @@ public class SetArmPosition extends CommandBase {
       runWinchUp = true;
     }
     m_climb.setArmTargetWithBounds(m_currentTarget);
-    m_climb.setWinch(runWinchUp ? -.6 : runWinchDown ? .6 : 0);
+    //m_climb.setWinch(runWinchUp ? -.6 : runWinchDown ? .6 : 0);
   }
 
   // Called once the command ends or is interrupted.

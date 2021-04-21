@@ -11,34 +11,45 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
+import frc.robot.Shortcuts;
 import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Shooter;
 
-public class RunArm extends CommandBase {
+public class MoveArm extends CommandBase {
   
   private final Climber m_climb;
-  private double m_target;
-  private final DoubleSupplier m_i;
+  private DoubleSupplier m_desiredTarget;
+  private Shooter m_shooter;
+  private double target;
 
-  public RunArm(Climber climb, DoubleSupplier increment) {
+  public MoveArm(Climber climb, Shooter shooter, DoubleSupplier target) {
     m_climb = climb;
-    m_i = increment;
+    m_desiredTarget = target;
+    m_shooter = shooter;
     addRequirements(climb);
+    addRequirements(shooter);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_target = m_climb.getArmPosition();
+    m_shooter.setPivotTarget(90);
+    target = m_climb.getArmPosition();
+    //m_target = m_climb.getArmPosition();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_target = m_target+m_i.getAsDouble();
-    m_climb.setArmTargetWithBounds(m_target);
+    boolean shooterReady = m_shooter.getPivotPosition() > 80;
+    if(shooterReady) {
+      target = Shortcuts.squeeze(m_desiredTarget.getAsDouble(), Constants.Arm_MinAngle, Constants.Arm_MaxAngle);
+    }
+    m_climb.setArmTargetWithBounds(target);
     //new may need testing
-    m_climb.setWinch(m_i.getAsDouble()*.75);
-    SmartDashboard.putNumber(getName() + " Target", m_target);
+    //m_climb.setWinch(m_i.getAsDouble()*.75);
+    SmartDashboard.putNumber(getName() + " Target", target);
   }
 
   // Called once the command ends or is interrupted.
@@ -46,7 +57,6 @@ public class RunArm extends CommandBase {
   public void end(boolean interrupted) {
     m_climb.stopArm();
     //nwe may need tested
-    m_climb.stopWinch();
   }
 
   // Returns true when the command should end.

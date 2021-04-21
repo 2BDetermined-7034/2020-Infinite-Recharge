@@ -10,45 +10,51 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Shortcuts;
-import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Climber;
 
-public class DriveForCm extends CommandBase {
-  private final double m_cm;
-  private final Drivetrain m_dt;
-  private final double m_maxSpeed;
+public class CalArm extends CommandBase {
 
-  public DriveForCm(Drivetrain dt, double cm, double maxSpeed) {
-    m_dt = dt;
-    m_cm = cm;
-    m_maxSpeed = maxSpeed;
-    addRequirements(dt);
+  private Climber m_climber;
+
+  private double power;
+
+  private double targetV = -50;
+
+  /**
+   * Creates a new RetractShooter.
+   */
+  public CalArm(Climber climber) {
+    m_climber = climber;
+    addRequirements(climber);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_dt.setEncoders(0);
-    m_dt.driveFor(m_cm, m_maxSpeed);
-    
+    power = m_climber.getArmOutput();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_dt.feedDoggy();
-    //Shortcuts.print(String.valueOf(Math.abs(m_dt.getPositionL() - m_cm)));
+    double v = m_climber.getArmVelocity();
+    power += Shortcuts.bound(0.00001*(targetV-v), 0.002);
+    m_climber.setArm(power);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_climber.stopArm();
+    if(!interrupted) {
+      Shortcuts.print("ARM RESET");
+      m_climber.setArmEncoder(0);
+    }
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    //return Math.abs(m_dt.getPositionL() + m_cm) < Constants.DT_pidPositionTolearance
-    //  && m_dt.getAbsoluteVelocity() < Constants.DT_pidVelocityTolearance;
-    return false;
+    return m_climber.getArmCurrent() >= Constants.Arm_SoftCurrentLimit;
   }
 }

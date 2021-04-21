@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Shooter;
 
@@ -23,7 +24,7 @@ public class RunShooter extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
     m_shooter = shooter;
     m_shooterSpeed = shooterSpeed;
-    addRequirements(shooter);
+    //addRequirements(shooter);
   }
 
   // Called when the command is initially scheduled.
@@ -34,7 +35,9 @@ public class RunShooter extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooter.setWheels(m_shooterSpeed.getAsDouble());
+    double targetV = m_shooterSpeed.getAsDouble();
+    m_shooter.setWheelsV(targetV);
+    SmartDashboard.putNumber(getName() + " Velocity Target", targetV);
   }
 
   // Called once the command ends or is interrupted.

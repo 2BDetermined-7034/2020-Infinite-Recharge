@@ -17,6 +17,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANPIDController.ArbFFUnits;
+import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -41,14 +42,22 @@ public class Shooter extends SubsystemBase {
     m_pivotPID = m_pivot.getPIDController();
 
     m_wheelR.setInverted(false);
+    
     m_wheelL.setInverted(false);
-    m_wheelL.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 50, 50, .5));
-    m_wheelR.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 50, 50, .5));
+    m_wheelL.setSensorPhase(true);
+
+    m_wheelL.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 50, .5));
+    m_wheelR.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 50, .5));
 
     m_wheelL.config_kP(0, Constants.ShootFly_kP);
+    m_wheelL.config_kI(0, Constants.ShootFly_kI);
+    m_wheelL.config_kD(0, Constants.ShootFly_kD);
     m_wheelR.config_kP(0, Constants.ShootFly_kP);
+    m_wheelR.config_kI(0, Constants.ShootFly_kI);
+    m_wheelR.config_kD(0, Constants.ShootFly_kD);
 
     m_pivot.setInverted(false);
+    m_pivot.setIdleMode(IdleMode.kCoast);
     m_pivotEnc.setPositionConversionFactor(Constants.ShootPiv_DegreesPerRot);
     m_pivotPID.setP(Constants.ShootPiv_kP);
     m_pivotPID.setI(Constants.ShootPiv_kI);
@@ -58,8 +67,15 @@ public class Shooter extends SubsystemBase {
   }
 
   //Getters for the flywheels
-  public double getWheelsOutput() { return m_wheelL.get(); }
-  public double getWheelsCurrent() { return m_wheelL.getSupplyCurrent(); }
+  public double getWheelLOutput() { return m_wheelL.getMotorOutputPercent(); }
+  public double getWheelLVelocity() { return m_wheelL.getSelectedSensorVelocity(); }
+  public double getWheelLCurrent() { return m_wheelL.getSupplyCurrent(); }
+  public double getWheelROutput() { return m_wheelR.getMotorOutputPercent(); }
+  public double getWheelRVelocity() { return m_wheelR.getSelectedSensorVelocity(); }
+  public double getWheelRCurrent() { return m_wheelR.getSupplyCurrent(); }
+  public double getWheelsOutput() { return (getWheelLOutput()+getWheelROutput())/2; }
+  public double getWheelsVelocity() { return (getWheelLVelocity()+getWheelRVelocity())/2; }
+  public double getWheelsCurrent() { return (getWheelLCurrent()+getWheelRCurrent())/2; }
 
   //Getters for the pivot
   public double getPivotOutput() { return m_pivot.getAppliedOutput(); }
@@ -80,8 +96,8 @@ public class Shooter extends SubsystemBase {
   }
 
   public void setWheelsV(double output) {
-    m_wheelR.set(ControlMode.Velocity, output*120000);
-    m_wheelL.set(ControlMode.Velocity, output*-120000);
+    m_wheelR.set(ControlMode.Velocity, output*100000);
+    m_wheelL.set(ControlMode.Velocity, output*100000);
   }
 
   public void setPivot(double output) {
@@ -132,10 +148,9 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber(getName() + " Wheels Throttle", getWheelsOutput());
-    SmartDashboard.putNumber(getName() + " Pivot Position", getPivotPosition());
+    SmartDashboard.putNumber(getName() + " Pivot Position---------------", getPivotPosition());
     SmartDashboard.putNumber(getName() + " Pivot Output", getPivotOutput());
     SmartDashboard.putNumber(getName() + " Pivot Current", getPivotCurrent());
-    SmartDashboard.putNumber(getName() + " Right Wheel Velocity", m_wheelR.getSelectedSensorVelocity());
-    SmartDashboard.putNumber(getName() + " Left Wheel Velocity", m_wheelL.getSelectedSensorVelocity());
+    SmartDashboard.putNumber(getName() + " Wheels Velocity-----------", getWheelsVelocity());
   }
 }

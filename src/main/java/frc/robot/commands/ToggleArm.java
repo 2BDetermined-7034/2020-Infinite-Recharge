@@ -38,9 +38,9 @@ public class ToggleArm extends CommandBase {
   // Called repeatedly when this Command is scheduled to run
   @Override
   public void execute() {
-    m_target += m_up ? 2 : -1;
+    m_target += m_up ? 3 : -2;
     m_climb.setArmTargetWithBounds(m_target);
-    m_climb.setWinch(m_up?-.6:.6);
+    //m_climb.setWinch(m_up?-.6:.6);
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -50,7 +50,8 @@ public class ToggleArm extends CommandBase {
       ? m_climb.getArmPosition() >= Constants.Arm_MaxAngle - 5
       : m_climb.getArmPosition() <= Constants.Arm_MinAngle + 5; 
       System.out.println(m_climb.getArmPosition());
-      return test;
+      //return test;
+    return false;
   }
 
   // Called once after isFinished returns true

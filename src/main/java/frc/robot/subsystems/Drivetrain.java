@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Shortcuts;
 
 public class Drivetrain extends SubsystemBase {
   
@@ -133,6 +134,17 @@ public class Drivetrain extends SubsystemBase {
   public void driveFor(double cm) {
     m_leftPID.setReference(-cm, ControlType.kPosition);
     m_rightPID.setReference(cm, ControlType.kPosition);
+  }
+
+  public void driveFor(double cm, double maxSpeed) {
+    Shortcuts.print("bruh");
+    m_leftPID.setOutputRange(-maxSpeed, maxSpeed);
+    m_rightPID.setOutputRange(-maxSpeed, maxSpeed);
+    driveFor(cm);
+  }
+
+  public void feedDoggy() {
+    m_drive.feedWatchdog();
   }
 
   public void setPositionTarget(double left, double right) {

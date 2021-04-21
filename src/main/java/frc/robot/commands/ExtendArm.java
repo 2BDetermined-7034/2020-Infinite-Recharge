@@ -4,7 +4,7 @@
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
-
+/*
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -14,9 +14,9 @@ import frc.robot.subsystems.Climber;
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
 public class ExtendArm extends SequentialCommandGroup {
-  /**
-   * Creates a new ExtendArm.
-   */
+  
+  //Creates a new ExtendArm.
+  
   public ExtendArm(Climber m_climb) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
@@ -24,3 +24,4 @@ public class ExtendArm extends SequentialCommandGroup {
           new RunArm(m_climb, () -> 1));
   }
 }
+*/

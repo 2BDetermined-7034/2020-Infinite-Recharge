@@ -16,10 +16,17 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class gPad extends EpicHID {
 
-    public static final String[] buttonNames = {"a","b","x","y","lb","rb","back","start","lsb","rsb"};
-    public static final String[] axisNames = {"lx","ly","ltrigger","rtrigger","rx","ry"};
+    public static final String[] buttonNames = {"A","B","X","Y","LB","RB","BACK","START","LSB","RSB"};
+    public static final String[] axisNames = {"LX","LY","LT","RT","RX","RY"};
 
     public gPad(final int port) {
         super(port, buttonNames, axisNames);
+    }
+
+    public double getX(Hand hand) {
+        return getAxis((hand == Hand.kLeft) ? "LX" : "RX");
+    }
+    public double getY(Hand hand) {
+        return getAxis((hand == Hand.kLeft) ? "LY" : "RY");
     }
 }

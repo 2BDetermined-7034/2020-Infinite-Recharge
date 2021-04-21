@@ -77,18 +77,21 @@ public final class Constants {
     public static final int PDPdriveL1 = 15;
 
     //shooter
-    public static final double ShootPiv_kP = 0.02;
+    public static final double ShootPiv_kP = 0.3;
     public static final double ShootPiv_kI = 0;
     public static final double ShootPiv_kD = 0;
     public static final double ShootPiv_kGrav = 0;
     public static final double ShootPiv_DegreesPerRot = 1;
-    public static final double ShootPiv_MaxOutput = .4;
+    public static final double ShootPiv_MaxOutput = .3;
     public static final double ShootPiv_MaxAngle = 100;
-    public static final double ShootPiv_MinAngle = 2;
-    public static final double ShootPiv_PosThreshold = 2;
-    public static final int ShootPiv_SoftCurrentLimit = 12;
-    public static final int ShootPiv_HardCurrentLimit = 10;
-    public static final double ShootFly_kP = 1;
+    public static final double ShootPiv_MinAngle = 0;
+    public static final double ShootPiv_PosThreshold = .5;
+    public static final int ShootPiv_SoftCurrentLimit = 2;
+    public static final int ShootPiv_HardCurrentLimit = 5;
+    public static final double ShootFly_kP = 0.025;
+    public static final double ShootFly_kI = 0.000045;
+    public static final double ShootFly_kD = 0;
+    public static final double ShootFly_VThreshhold = 10000;
 
     //Vision Allignment
     public static final double VisX_kP = 1;
@@ -98,10 +101,11 @@ public final class Constants {
     public static final double VisX_Tol = 0;
     public static final double VisY_Tol = 5;
     public static final double VisY_distanceConstant = 254.3;
-    public static final double VisY_Offset = 6;
+    public static final double VisY_Offset = 8;
     public static final double VisY_VTol = 100;
     public static final double VisX_VTol = 100;
-    public static int Vis_TimerConfidence = 5;
+    public static final int Vis_TimerConfidence = 5;
+    public static double Vis_LLAngle = 20.5;
 	
 
     //Indexer
@@ -117,12 +121,12 @@ public final class Constants {
     public static final double ShiftRPMTriggerLow = 1000;
     public static final double DT_kP = .03;
     public static final double DT_kI = 0;
-    public static final double DT_kD = .1;
+    public static final double DT_kD = 0;
     public static final double DT_MaxOutput = 1;
     public static final double DT_cmPerRot = 6.86;
 
     public static final double DT_pidPositionTolearance = 1;
-    public static final double DT_pidVelocityTolearance = 100;
+    public static final double DT_pidVelocityTolearance = 50;
     public static final int DT_SoftCurrentLimit = 20;
     public static final int DT_HardCurrentLimit = 40;
     public static final double DT_Deadzone = 0.15;
@@ -131,7 +135,7 @@ public final class Constants {
     //Arm
     public static final double Arm_MinAngle = 0;
     public static final double Arm_MaxAngle = 110;
-    public static final double Arm_MaxOutput = .35;
+    public static final double Arm_MaxOutput = .2;
     public static final int Arm_SoftCurrentLimit = 40;
     public static final int Arm_HardCurrentLimit = 60;
     public static final double Arm_DegreesPerRot = 7.667;
