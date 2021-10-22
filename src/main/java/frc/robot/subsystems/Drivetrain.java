@@ -77,8 +77,8 @@ public class Drivetrain extends SubsystemBase {
     m_left.setInverted(true);
     m_right.setInverted(true);
 
-    m_left.setSmartCurrentLimit(Constants.DT_HardCurrentLimit);
-    m_right.setSmartCurrentLimit(Constants.DT_HardCurrentLimit);
+    m_left.setSmartCurrentLimit(Constants.DT_HardCurrentLimitL);
+    m_right.setSmartCurrentLimit(Constants.DT_HardCurrentLimitL);
 
     m_rightEnc.setPositionConversionFactor(Constants.DT_cmPerRot);
     m_leftEnc.setPositionConversionFactor(Constants.DT_cmPerRot);

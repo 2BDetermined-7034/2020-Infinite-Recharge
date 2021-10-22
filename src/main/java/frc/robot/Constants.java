@@ -128,7 +128,8 @@ public final class Constants {
     public static final double DT_pidPositionTolearance = 1;
     public static final double DT_pidVelocityTolearance = 50;
     public static final int DT_SoftCurrentLimit = 20;
-    public static final int DT_HardCurrentLimit = 40;
+    public static final int DT_HardCurrentLimitL = 35;
+    public static final int DT_HardCurrentLimitR = 38;
     public static final double DT_Deadzone = 0.15;
 
 

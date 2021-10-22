@@ -32,7 +32,7 @@ public class TrenchAuto extends SequentialCommandGroup {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
     super(
-      new InstantCommand(() -> indexer.setIntake(1)),
+      //new InstantCommand(() -> indexer.setIntake(1)),
       //375 cm's is all three, 350 is first two
       //new DriveForCm(drivetrain, -260, .3),
       //new DriveForCm(drivetrain, -80, .2),
