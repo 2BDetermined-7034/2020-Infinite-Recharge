@@ -56,7 +56,7 @@ public class RobotContainer {
     m_shooter.register();
     m_drivetrain.register();
 
-    SmartDashboard.putData("Toggle Compressor", new InstantCommand(() -> m_pneumatics.toggleCompressor()));
+    SmartDashboard.putData("Toggle Compressor", new InstantCommand(m_pneumatics::toggleCompressor));
     SmartDashboard.putData("Reset Pivot", new InstantCommand(() -> m_shooter.setPivotEncoder(0)));
     SmartDashboard.putData("Reset Arm", new InstantCommand(() -> m_climber.setArmEncoder(0)));
     SmartDashboard.putData("Reset Drivetrain", new InstantCommand(() -> m_drivetrain.setEncoders(0)));
@@ -93,7 +93,7 @@ public class RobotContainer {
     m_X3D.getButton(5).whileHeld(new RunWinch(m_climber, () -> -1));
     m_X3D.getButton(7).whileHeld(new RunWinch(m_climber, () -> .6));
     m_X3D.getButton(1).whileHeld(new SwoleMode(m_drivetrain));
-    m_X3D.getButton(3).toggleWhenPressed(new VisAlign(m_drivetrain, m_shooter, m_limeLight, 
+    m_X3D.getButton(3).toggleWhenPressed(new BlakeTrashEyes(m_drivetrain, m_shooter, m_limeLight,
       () -> true, () -> (Math.abs(m_X3D.getX()) > .4)
     ));
     
