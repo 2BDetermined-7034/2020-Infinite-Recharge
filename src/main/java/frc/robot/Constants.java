@@ -106,6 +106,7 @@ public final class Constants {
     public static final double VisX_VTol = 100;
     public static final int Vis_TimerConfidence = 5;
     public static double Vis_LLAngle = 20.5;
+    //public static double Vis_LLAngle = 25.5;
 	
 
     //Indexer

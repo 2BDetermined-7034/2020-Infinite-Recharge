@@ -36,6 +36,7 @@ public class Shooter extends SubsystemBase {
   public Shooter() {
     m_wheelL = new WPI_TalonSRX(Constants.IDshooterWheelL);
     m_wheelR = new WPI_TalonSRX(Constants.IDshooterWheelR);
+    
 
     m_pivot = new CANSparkMax(Constants.IDshooterPivot, CANSparkMaxLowLevel.MotorType.kBrushless);
     m_pivotEnc = m_pivot.getEncoder();

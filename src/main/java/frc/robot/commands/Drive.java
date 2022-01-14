@@ -26,14 +26,17 @@ public class Drive extends CommandBase {
   private final DoubleSupplier m_driveY;
   private final DoubleSupplier m_driveX;
 
+  private BooleanSupplier m_gear;
+
   private BooleanSupplier m_invert;
   private boolean inverted;
 
-  public Drive(Drivetrain dt, DoubleSupplier Y, DoubleSupplier X, BooleanSupplier invert) {
+  public Drive(Drivetrain dt, DoubleSupplier Y, DoubleSupplier X, BooleanSupplier invert, BooleanSupplier gear) {
     m_dt = dt;
     m_driveY = Y;
     m_driveX = X;
     m_invert = invert;
+    m_gear = gear;
     addRequirements(dt);
   }
 
@@ -41,13 +44,14 @@ public class Drive extends CommandBase {
   @Override
   public void initialize() {
 
-    m_dt.setGear(Constants.HIGH_GEAR);
+    
     inverted = false;
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   public void execute() {
+    m_dt.setGear(m_gear.getAsBoolean());
     if (m_invert.getAsBoolean()) { inverted = !inverted; }
     m_dt.drive((inverted ? 1 : -1) * m_driveY.getAsDouble(), m_driveX.getAsDouble());
     //Shortcuts.print(String.valueOf(m_driveY.getAsDouble()));

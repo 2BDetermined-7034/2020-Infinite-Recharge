@@ -36,6 +36,7 @@ public class TrenchAuto extends SequentialCommandGroup {
       //375 cm's is all three, 350 is first two
       //new DriveForCm(drivetrain, -260, .3),
       //new DriveForCm(drivetrain, -80, .2),
+      /*
       new DriveForCm(drivetrain, -355, .2),
       new ParallelRaceGroup(
         new Drive(drivetrain, () -> .4, () -> -.5, () -> false),
@@ -43,6 +44,7 @@ public class TrenchAuto extends SequentialCommandGroup {
       ),
       new DriveForCm(drivetrain, 200, .35),
       new InstantCommand(() -> shooter.setWheels(.875)),
+      */
       new ParallelRaceGroup(
         new VisAlign(drivetrain, shooter, ll, () -> true, () -> false, () -> 0),
         new SequentialCommandGroup(
@@ -53,7 +55,8 @@ public class TrenchAuto extends SequentialCommandGroup {
       ),
       new InstantCommand(() -> indexer.setIntake(0)),
       new InstantCommand(() -> shooter.setPivotTarget(0)),
-      new InstantCommand(() -> shooter.setWheels(0))
+      new InstantCommand(() -> shooter.setWheels(0)),
+      new DriveForCm(drivetrain, 200, .35)
     );
   }
 }

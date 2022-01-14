@@ -55,18 +55,20 @@ public class TestAuto extends SequentialCommandGroup {
     */
     super(
       new InstantCommand(() -> shooter.setPivotTarget(.60)),
-      new InstantCommand(() -> shooter.setWheels(.70)),
+      new InstantCommand(() -> shooter.setWheels(.80)),
       new ParallelRaceGroup(
-        //new VisAlign(dt, shooter, ll, () -> true, () -> false, () -> 0),
+        new VisAlign(dt, shooter, ll, () -> true, () -> false, () -> 0),
         new SequentialCommandGroup(
-          new WaitCommand(1),
+          new WaitCommand(3),
           new InstantCommand(() -> indexer.setHopper(1)),
-          new RunIndexer(indexer, () -> .2, () -> 1).withTimeout(2)
+          new RunIndexer(indexer, () -> .2, () -> 1).withTimeout(2),
+          new WaitCommand(2)
         )
       ),
+      new WaitCommand(1),
       new InstantCommand(() -> shooter.setPivotTarget(0)),
       new InstantCommand(() -> shooter.setWheels(0)),
-      new DriveForCm(dt, 175, .5)
+      new DriveForCm(dt, 175, .3)
     );
   }
 }

@@ -71,12 +71,12 @@ public class RobotContainer {
     SmartDashboard.putData("Reset Drivetrain", new InstantCommand(() -> m_drivetrain.setEncoders(0)));
     SmartDashboard.putData("Calibrate Shooter Pivot", new CalShooterPivot(m_shooter));
 
-    //m_autoCommand = new TestAuto(m_drivetrain, m_limeLight, m_shooter, m_indexer);
-    m_autoCommand = new DriveForCm(m_drivetrain, 275, .5);
+    m_autoCommand = new TestAuto(m_drivetrain, m_limeLight, m_shooter, m_indexer);
+    //m_autoCommand = new DriveForCm(m_drivetrain, 275, .5);
     //m_autoCommand = new TrenchAuto(m_drivetrain, m_indexer, m_limeLight, m_shooter);
 
     m_drivetrain.setDefaultCommand(new Drive(m_drivetrain, () -> (Shortcuts.deadZone(-m_X3D.getAxis("Y"), 0.1)),
-        () -> (Shortcuts.deadZone(m_X3D.getAxis("X"), 0.1)+.05), () -> m_X3D.getRawButtonPressed(2)));
+        () -> (Shortcuts.deadZone(m_X3D.getAxis("X"), 0.1)+.05), () -> (m_X3D.getRawButtonPressed(2)), () -> (m_X3D.getRawButtonPressed(1))));
     //m_indexer.setDefaultCommand(
     //    new RunIndexer(m_indexer, () -> m_gPad.getAxis("LX") * .75, () -> -m_gPad.getAxis("LY") * .75));
     
@@ -104,7 +104,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     PrintCommand printCmd = new PrintCommand("WARNING ==ROBOT SELF-DESTRUCT SEQUENCE INITIATED==");
     // Command runArm = new RunArm(m_neoTest, () ->
-    // m_gPad.getTriggerAxis(Hand.kLeft), () -> m_gPad.getTriggerAxis(Hand.kRight));
+     //m_gPad.getTriggerAxis(Hand.kLeft), () -> m_gPad.getTriggerAxis(Hand.kRight));
     m_X3D.getJoystickButton("5").whenPressed(new InstantCommand(() -> m_climber.erect(true)));
     m_X3D.getJoystickButton("6").whenPressed(new InstantCommand(() -> m_climber.erect(false)));
     //m_gunnerPanel.getJoystickButton("armswitch").whenPressed(new ToggleArm(m_climber, true));
@@ -114,7 +114,7 @@ public class RobotContainer {
     m_gunnerPanel.getJoystickButton("winchup").whileHeld(new RunWinch(m_climber, () -> 1));
     m_gunnerPanel.getJoystickButton("winchdown").whileHeld(new RunWinch(m_climber, () -> -1));
     //m_gunnerPanel.getJoystickButton("armstoggle").toggleWhenActive(new SetArmPosition(m_climber, () -> (Constants.Arm_MaxAngle - Constants.Arm_MinAngle) * m_gunnerPanel.getAxisPercent("arms")));
-    m_X3D.getJoystickButton(11).toggleWhenPressed(new SwoleMode(m_drivetrain));
+    m_X3D.getJoystickButton(4).toggleWhenPressed(new SwoleMode(m_drivetrain));
     m_X3D.getJoystickButton(3).whileHeld(new VisAlign(m_drivetrain, m_shooter, m_limeLight, 
       () -> true, () -> (Math.abs(m_X3D.getX()) > .4), () -> m_X3D.getY()
     ));
@@ -126,7 +126,9 @@ public class RobotContainer {
     m_X3D.getJoystickButton(12).whenPressed(printCmd);
 
     m_gunnerPanel.getJoystickButton("intakein").whileHeld(new RunIntake(m_indexer, () -> Constants.IndexIntake_Output));
-    m_X3D.getJoystickButton("TRIGGER").whileHeld(new RunIntake(m_indexer, () -> Constants.IndexIntake_Output));
+    //m_X3D.getJoystickButton("TRIGGER").whileHeld(new RunIntake(m_indexer, () -> Constants.IndexIntake_Output));
+    //m_X3D.getJoystickButton("TRIGGER").whenPressed(new InstantCommand(() -> m_indexer.setHopper(.25)));
+    //m_X3D.getJoystickButton("TRIGGER").whenReleased(new InstantCommand(() -> m_indexer.setHopper(0)));
     m_gunnerPanel.getJoystickButton("intakeout").whileHeld(new RunIntake(m_indexer, () -> -Constants.IndexIntake_Output));
     m_gunnerPanel.getJoystickButton("intakein").whenPressed(new InstantCommand(() -> m_indexer.setHopper(.25)));
     m_gunnerPanel.getJoystickButton("intakein").whenReleased(new InstantCommand(() -> m_indexer.setHopper(0)));
